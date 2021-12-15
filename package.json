@@ -18,7 +18,9 @@
   "homepage": "https://github.com/congtuan0104/Do_An_2_CSDLNC#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "express-handlebars": "^6.0.2"
+    "express-handlebars": "^6.0.2",
+    "msnodesqlv8": "^2.4.4",
+    "mssql": "^7.3.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
