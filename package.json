@@ -19,6 +19,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "express-handlebars": "^6.0.2",
+    "express-session": "^1.17.2",
     "msnodesqlv8": "^2.4.4",
     "mssql": "^7.3.0"
   },

@@ -5,6 +5,7 @@ const route = require('./routes/index');
 const port = 3000;
 const handlebars = require('express-handlebars');
 const sql = require('mssql/msnodesqlv8');
+const session = require('express-session');
 //const db = require('./models/dbConfig');
 //const db = require('./models/dbOperations');
 
@@ -21,6 +22,14 @@ const hbs = handlebars.create({
         }
     }
 })
+
+//app.set('trust proxy', 1) // trust first proxy
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  //cookie: { secure: true }
+}))
 
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');

@@ -5,7 +5,7 @@ const config = {
     password: '1234',
     server: 'CONGTUAN\\CONGTUAN',
     driver: 'msnodesqlv8',
-    database: 'DoAn01_N1',
+    database: 'DoAn02',
     port: 1433,
     options: {
         trustedConnection: true
@@ -15,12 +15,7 @@ const config = {
 async function connect(){
     try {
         await sql.connect(config, function (err) {
-            // let sqlRequest = new sql.Request();
-            // let sqlQuery = 'Select * From BOMON';
-            // sqlRequest.query(sqlQuery, function (err, data) {
-            //     console.table(data.recordset);
             console.log('Kết nối thành công');
-            // });
         });
         
     } catch (err) {
