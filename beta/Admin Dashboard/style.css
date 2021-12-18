@@ -10,7 +10,7 @@
   position: fixed;
   height: 100%;
   width: 240px;
-  background: #0A2558;
+  background: rgb(202, 17, 17);
   transition: all 0.5s ease;
 }
 .sidebar.active{
@@ -106,11 +106,11 @@
 .home-section nav .sidebar-button{
   display: flex;
   align-items: center;
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 500;
 }
 nav .sidebar-button i{
-  font-size: 35px;
+  font-size: 20px;
   margin-right: 10px;
 }
 .home-section nav .search-box{
@@ -127,7 +127,7 @@ nav .search-box input{
   background: #F5F6FA;
   border: 2px solid #EFEEF1;
   border-radius: 6px;
-  font-size: 18px;
+  font-size: 16px;
   padding: 0 15px;
 }
 nav .search-box .bx-search{
@@ -142,7 +142,7 @@ nav .search-box .bx-search{
   line-height: 40px;
   text-align: center;
   color: #fff;
-  font-size: 22px;
+  font-size: 20px;
   transition: all 0.4 ease;
 }
 .home-section nav .profile-details{
@@ -162,7 +162,7 @@ nav .profile-details img{
   object-fit: cover;
 }
 nav .profile-details .admin_name{
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
   color: #333;
   margin: 0 10px;
@@ -384,7 +384,7 @@ nav .profile-details i{
     margin: 0;
   }
 }
-@media (max-width: 1000px) {
+@media (max-width: 1024px) {
   .overview-boxes .box{
     width: calc(100% / 2 - 15px);
     margin-bottom: 15px;
