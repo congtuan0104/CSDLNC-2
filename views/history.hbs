@@ -1,6 +1,7 @@
 
 <div class="mt-4">
     <div class="container">
+        <h1>SẢN PHẨM MÀ BẠN ĐÃ MUA</h1>
         <div class="row">
             {{#each products}}
             <div class="col-sm-6 col-lg-3 mt-4">
@@ -16,8 +17,8 @@
                         <h6 class="card-text text-left text-danger "><b class="money">{{this.GiaBan}}đ</b></h6>
                     </div>
                     <div class="card-footer">
-                        <a href="/addToCart?productID={{this.MaSP}}&q=1" class="btn btn-lg btn-danger btn-block" role="button" aria-pressed="true">CHỌN
-                            MUA</a>
+                        <a href="/addToCart?productID={{this.MaSP}}&q=1" class="btn btn-lg btn-warning btn-block" 
+                        role="button" aria-pressed="true">MUA LẦN NỮA</a>
                     </div>
                 </div>
             </div>

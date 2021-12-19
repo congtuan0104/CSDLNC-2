@@ -6,11 +6,11 @@
       aria-controls="collapsibleNavId" aria-expanded="false" aria-label="Toggle navigation"><span
         class="navbar-toggler-icon"></span></button>
     <div class="collapse navbar-collapse" id="collapsibleNavId">
-      <form class="form-inline ml-auto my-2 my-lg-0 mr-3">
+      <form action="/search" method="get" class="form-inline ml-auto my-2 my-lg-0 mr-3">
         <div class="input-group" style="width: 520px;">
-          <input type="text" class="form-control" aria-label="Small" placeholder="Nhập sản phẩm cần tìm kiếm...">
+          <input type="text" name="q" class="form-control" aria-label="Small" placeholder="Nhập sản phẩm cần tìm kiếm...">
           <div class="input-group-append">
-            <button type="button" class="btn" style="background-color: #CF111A; color: white;">
+            <button type="submit" class="btn" style="background-color: #CF111A; color: white;">
               <i class="fa fa-search"></i>
             </button>
           </div>

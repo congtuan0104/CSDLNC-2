@@ -6,8 +6,6 @@ const port = 3000;
 const handlebars = require('express-handlebars');
 const sql = require('mssql/msnodesqlv8');
 const session = require('express-session');
-//const db = require('./models/dbConfig');
-//const db = require('./models/dbOperations');
 
 
 const hbs = handlebars.create({
@@ -19,9 +17,17 @@ const hbs = handlebars.create({
                 return options.fn(this)
             }
             return options.inverse(this)
+        },
+
+        eq(s1,s2,option){
+            if(s1==s2){
+                return option.fn(this)
+            }
+            return options.inverse(this)
         }
     }
 })
+
 
 //app.set('trust proxy', 1) // trust first proxy
 app.use(session({
