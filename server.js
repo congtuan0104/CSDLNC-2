@@ -23,7 +23,7 @@ const hbs = handlebars.create({
             if(s1==s2){
                 return option.fn(this)
             }
-            return options.inverse(this)
+            return option.inverse(this)
         }
     }
 })

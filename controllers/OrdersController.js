@@ -42,6 +42,7 @@ class OrdersController {
         if (req.session.user) {
             const orderDetail = await db.getOrderDetail(req.params.orderID);
             const orderList = await db.getOrderList(req.params.orderID);
+            const status = orderDetail.at(0).TinhTrang;
             if (orderDetail.at(0).TinhTrang == 0) {
                 orderDetail.at(0).TinhTrang  = 'Đang chuẩn bị hàng';
             }
@@ -51,12 +52,14 @@ class OrdersController {
             else if (orderDetail.at(0).TinhTrang  == 2) {
                 orderDetail.at(0).TinhTrang  = 'Đã nhận hàng/Đã thanh toán';
             }
+            
 
             res.render('order-detail', {
                 title: 'Chi tiết hoá đơn',
                 orderDetail: orderDetail,
                 orderList: orderList,
                 user: req.session.user,
+                status: status,
                 numberOfProduct: req.session.cart.length,
                 cssP: () => 'invoice-template',
                 scriptP: () => 'script',
