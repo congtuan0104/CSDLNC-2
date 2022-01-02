@@ -1,0 +1,54 @@
+<div class="container-md px-5 py-3 text-center" style="background-color: white;border-radius:25px">
+
+    <div class="row align-items-center border-bottom py-3">
+        <div class="col-1">ID</div>
+        <div class="col">Chi nhánh</div>
+        <div class="col-3"> Ngày lập</div>
+        <div class="col-2"> Tổng tiền</div>
+        <div class="col-3"> Địa chỉ gửi hàng</div>
+        <div class="col-2"> Tình trạng</div>
+
+    </div>
+    {{#each orders}}
+    <div class="row align-items-center border-bottom py-2">
+        <div class="col-1">{{this.MaHD}}</div>
+        <div class="col">{{this.MaCN}}</div>
+        <div class="col-3">{{this.NgayLap}}</div>
+        <div class="col-2">{{this.TongTien}}đ</div>
+        <div class="col-3">{{this.DiaChiNhanHang}}</div>
+        <div class="col-2">{{this.TinhTrang}}</div>
+
+    </div>
+    {{/each}}
+
+
+
+    <div class="row text-center mt-5 mb-3">
+        <div class="col">
+            <ul class="pagination justify-content-center">
+                <li class="page-item{{#eq page 1}} disabled{{/eq}}">
+                    <a class="page-link" href="/admin/orders?page={{sub page 1}}">Trước</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="/admin/orders?page=1">1</a></li>
+                <li class="page-item"><a class="page-link" href="/admin/orders?page=2">2</a></li>
+                <li class="page-item"><a class="page-link" href="/admin/orders?page=3">3</a></li>
+                <li class="page-item"><a class="page-link" href="/admin/orders?page=4">4</a></li>
+                <li class="page-item"><a class="page-link" href="/admin/orders?page=5">5</a></li>
+                <li class="page-item"><a class="page-link" href="/admin/orders?page=6">6</a></li>
+                <li class="page-item">
+                    <a class="page-link" href="/admin/orders?page={{sum page 1}}">Tiếp</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="fixed-bottom" style="bottom: 10px; right:10px">
+        <button class="btn btn-primary float-right rounded-circle justify-content-center" 
+        aria-controls="collapseExample" data-toggle="modal" data-target="#dialog1">
+            <i class="fa fa-plus text-white" aria-hidden="true" style="font-size:30px;"></i>
+        </button>
+    </div>
+</div>
+
+
+

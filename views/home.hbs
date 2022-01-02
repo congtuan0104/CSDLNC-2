@@ -3,8 +3,8 @@
     <div class="container">
         <div class="row">
             {{#each products}}
-            <div class="col-sm-6 col-lg-3 mt-4">
-                <div class="card h-100 border-2 border-danger">
+            <div class="col-sm-6 col-lg-3 mt-4 px-0">
+                <div class="card h-100 border-2 border-danger ">
                     <a href="/products/{{this.MaSP}}">
                         <img src="/img/product-mix3.png" class="card-img-top" alt="Hình minh hoạ">
                     </a>
@@ -23,5 +23,24 @@
             </div>
             {{/each}}
         </div>
+
+        <div class="row text-center mt-5 mb-3">
+        <div class="col">
+            <ul class="pagination justify-content-center">
+            <li class="page-item{{#eq page 1}} disabled{{/eq}}">
+                <a class="page-link" href="/?page={{sub page 1}}">Trước</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="/?page=1">1</a></li>
+            <li class="page-item"><a class="page-link" href="/?page=2">2</a></li>
+            <li class="page-item"><a class="page-link" href="/?page=3">3</a></li>
+            <li class="page-item"><a class="page-link" href="/?page=4">4</a></li>
+            <li class="page-item"><a class="page-link" href="/?page=5">5</a></li>
+            <li class="page-item"><a class="page-link" href="/?page=6">6</a></li>
+            <li class="page-item{{#eq page 6}} disabled{{/eq}}">
+                <a class="page-link" href="/?page={{sum page 1}}">Tiếp</a>
+            </li>
+        </ul>
+        </div>
+    </div>
     </div>
 </div>

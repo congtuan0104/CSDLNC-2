@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="UTF-8">
+    <title> {{{title}}} </title>
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="icon" href="/img/logo.png">
+    <link rel="stylesheet" href="/css/management.css">
+    {{>(cssP)}}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <a class="text-decoration-none" href="/admin">
+            <div class="logo-details">
+                <img class="ml-1 mr-2" src="/img/logo.png" width="50px" alt="">
+                <span class="logo_name"><b>ConCung</b>.com</span>
+            </div>
+        </a>
+        <ul class="nav-links">
+            <li>
+                <a href="/admin" class="active">
+                    <i class='bx bx-grid-alt'></i>
+                    <span class="links_name">Trang chính</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/products">
+                    <i class='bx bx-box'></i>
+                    <span class="links_name">Quản lý sản phẩm</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/warehouse">
+                    <i class='bx bx-coin-stack'></i>
+                    <span class="links_name">Quản lý kho hàng</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/staff">
+                    <i class='fa fa-user' aria-hidden="true"></i>
+                    <span class="links_name">Quản lý nhân viên</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/orders">
+                    <i class='bx bx-list-ul'></i>
+                    <span class="links_name">Quản lý đơn hàng</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/statistic">
+                    <i class='bx bx-pie-chart-alt-2'></i>
+                    <span class="links_name">Thống kê</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/turnover">
+                    <i class="fa fa-btc" aria-hidden="true"></i>                    
+                    <span class="links_name">Doanh thu</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <i class='bx bx-message'></i>
+                    <span class="links_name">Tin nhắn</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                    <i class='bx bx-cog'></i>
+                    <span class="links_name">Cài đặt</span>
+                </a>
+            </li>
+            <li class="log_out">
+                <a href="/log-out">
+                    <i class='bx bx-log-out'></i>
+                    <span class="links_name">Đăng xuất</span>
+                </a>
+            </li>
+
+        </ul>
+    </div>
+    <section class="home-section">
+        <nav>
+            <div class="sidebar-button">
+                <i class='bx bx-menu sidebarBtn'></i>
+                <span class="dashboard">{{{title}}}</span>
+            </div>
+
+            <form action="/admin/search" class="search-box">
+                <input type="text" placeholder="Nhập thông tin muốn tìm kiếm" name="q">
+                <button type="submit"><i class='bx bx-search'></i></button>
+            </form>
+
+            <div class="profile-details">
+                <img src="/img/avatar.jpg" alt="">
+                <span class="admin_name text-primary">{{#each staff}}{{this.TenNV}}{{/each}} (Admin)</span>
+            </div>
+        </nav>
+
+        <div class="home-content">
+            <div class="container-fluid">
+                {{{body}}}
+            </div>
+        </div>
+
+    </section>
+
+    <script src="/js/jquery-3.5.1.min.js"></script>
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/management.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    {{>(scriptP)}}
+
+
+</body>
+
+</html>

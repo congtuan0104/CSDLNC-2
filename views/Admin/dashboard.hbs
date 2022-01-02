@@ -1,0 +1,99 @@
+<div class="overview-boxes">
+    <div class="box">
+        <div class="right-side">
+            <div class="box-topic">Tổng số đơn hàng</div>
+            <div class="number">4,876</div>
+            <div class="indicator">
+                <i class='bx bx-plus'></i>
+                <span class="text">Thêm 4 đơn hàng hôm nay</span>
+            </div>
+        </div>
+        <i class='bx bx-cart-alt cart'></i>
+    </div>
+    <div class="box">
+        <div class="right-side">
+            <div class="box-topic">Số đơn hoàn thành</div>
+            <div class="number">4,824</div>
+            <div class="indicator">
+                <i class='bx bx-plus'></i>
+                <span class="text">Thêm 3 đơn hàng hôm nay</span>
+            </div>
+        </div>
+        <i class='bx bxs-cart-add cart two'></i>
+    </div>
+    <div class="box">
+        <div class="right-side">
+            <div class="box-topic">Doanh thu tháng</div>
+            <div class="number">18,000,000</div>
+            <div class="indicator">
+                <i class='bx bx-up-arrow-alt'></i>
+                <span class="text">Tăng 3% với tháng trước</span>
+            </div>
+        </div>
+        <i class='bx bx-cart cart three'></i>
+    </div>
+    
+</div>
+
+
+<div class="sales-boxes">
+    <div class="recent-sales box">
+        <div class="title text-primary">Đơn hàng gần đây</div>
+        <div class="sales-details">
+            <ul class="details">
+                <li class="topic">Ngày</li>
+                {{#each recentOrder}}
+                <li><a href="#">{{this.NgayLap}}</a></li>
+                {{/each}}
+
+            </ul>
+            <ul class="details">
+                <li class="topic">Khách hàng</li>
+                {{#each recentOrder}}
+                <li><a href="#">{{this.TenKH}}</a></li>
+                {{/each}}
+            </ul>
+            
+            <ul class="details">
+                <li class="topic">Tổng tiền</li>
+                {{#each recentOrder}}
+                <li><a href="#">{{this.TongTien}}đ</a></li>
+                {{/each}}              
+            </ul>
+
+            <ul class="details">
+                <li class="topic">Tình trạng</li>
+                {{#each recentOrder}}
+                <li><a href="#">{{this.TinhTrang}}</a></li>
+                {{/each}}      
+            </ul>
+        </div>
+        <div class="button">
+            <a class="py-2 px-2" href="/admin/orders">Xem tất cả</a>
+        </div>
+    </div>
+    <div class="top-sales box">
+        <div class="title text-primary">Sản phẩm bán chạy</div>
+        <ul class="top-sales-details">
+            {{#if bestSeller}}
+            <li>
+                <span class="product">Sản phẩm</span>
+                <span class="price">Đã bán</span>
+            </li>
+            {{#each bestSeller}}
+            <li>
+                <a href="/admin/products/{{this.MaSP}}">
+                    <img class="border" src="img/product-mix3.png" alt="">
+                    <span class="product">{{this.TenSP}}</span>
+                </a>
+                <span class="price">{{this.SLBan}}</span>
+            </li>
+            {{/each}}
+            {{else}}
+                Chưa có thông tin của tháng này
+            {{/if}}
+            
+            
+        </ul>
+    </div>
+</div>

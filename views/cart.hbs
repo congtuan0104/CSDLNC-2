@@ -39,7 +39,7 @@
                             </div>
                             <div class="col"> {{this.cost}}</div>
                             <div class="col">{{this.discount}}</div>
-                            <div class="col-2"> <input class="w-75" type="number" min="1" name="quantity" value="{{this.quantity}}"></div>
+                            <div class="col-2"> <input readonly class="w-50" type="number" min="1" name="quantity" value="{{this.quantity}}"></div>
                             <div class="col">{{this.total}}</div>
                             
                             <span class="close">
@@ -80,7 +80,16 @@
                         </div>
                         {{/each}}
                         <div class="form-row mb-2">
+                            <label for="branch">Chi nhánh lấy hàng</label>
+                            <select class="custom-select" id="branch" name="branch" required>
+                                <option selected value="">Chọn chi nhánh gần bạn nhất</option>
+                                {{#each branch}}
+                                <option value="{{this.MaCN}}">{{this.DiaChi}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
 
+                        <div class="form-row mb-2">
                             <label for="age">Hình thức nhận hàng</label>
                             <select class="custom-select" id="inputGroupSelect01">
                                 <option selected value="1">Giao hàng thường</option>

@@ -4,8 +4,17 @@ const db = require('../models/dbOperations');
 class SiteController {
     //[GET]/
     home(req, res, next) {
-
-        db.get10Products().then((data) => {
+        let page;
+        if(req.query.page){
+            page=req.query.page;
+        }
+        else{
+            page = 1;
+        }
+        if(page<1){
+            page=1;
+        }
+        db.getProducts(page).then((data) => {
             //res.json(data);
             //console.log(data);
             if (req.session.user) {
@@ -15,6 +24,7 @@ class SiteController {
                     user: req.session.user,
                     numberOfProduct: req.session.cart.length,
                     products: data,
+                    page: page,
                     cssP: () => 'css',
                     scriptP: () => 'script',
                     navP: () => 'navCustomer',
@@ -25,6 +35,7 @@ class SiteController {
             res.render('home', {
                 title: 'Trang chủ',
                 products: data,
+                page: page,
                 cssP: () => 'css',
                 scriptP: () => 'script',
                 navP: () => 'nav',
@@ -34,14 +45,16 @@ class SiteController {
     }
 
     //[GET]/cart
-    cart(req, res, next) {
+    async cart(req, res, next) {
         if (req.session.user) {
+            const branch = await db.getAllBranch();
             res.render('cart', {
                 title: 'Giỏ hàng',
                 user: req.session.user,
                 numberOfProduct: req.session.cart.length,
                 products: req.session.cart,
                 grandTotal: req.session.grandTotal,
+                branch: branch,
                 cssP: () => 'cartStyle',
                 scriptP: () => 'script',
                 navP: () => 'navCustomer',
@@ -127,11 +140,28 @@ class SiteController {
     //POST/verifyStaff
     async verifyStaff(req, res, next) {
         const phone = req.body.phone;
-        const user = await db.verifyStaff(phone);
-        if (user) {
+        const staff = await db.verifyStaff(phone);
+        if (staff) {
             console.log('Đăng nhập thành công');
-            res.send(user.at(0).TenNV);
-            return;
+            req.session.staff = staff;
+            if (staff.at(0).LoaiNhanVien == 0) {
+                console.log('Nhân viên bán hàng');
+                res.send(staff.at(0).TenNV);
+                return;
+            }
+            if (staff.at(0).LoaiNhanVien == 1) {
+                console.log('Quản lý chi nhánh');
+                res.send(staff.at(0).TenNV);
+                return;
+            }
+
+            if (staff.at(0).LoaiNhanVien == 2) {
+                console.log('Admin');
+                //res.send(staff.at(0).TenNV);
+                res.redirect('/admin')
+                return;
+            }
+
         }
         res.send('SĐT này chưa được đăng ký');
         return;
@@ -233,14 +263,18 @@ class SiteController {
             const address = req.body.address;
             const grandTotal = req.session.grandTotal;
             const customerID = req.session.user.at(0).MaKH;
+            const branch = req.body.branch;
+            const orderID = await db.addToOrder(customerID, address, grandTotal, branch, null);
 
-            const orderID = await db.addToOrder(customerID, address, grandTotal, null);
-
-
-            req.session.cart.forEach(product => {
-                db.addOrderDetail(orderID, product.productID, product.cost, product.discount, product.quantity, product.total);
-                db.addShoppingHistory(customerID, product.productID);
+            var success;
+            if(req.session.cart.length==0){
+                res.send('Chưa có sản phẩm nào trong giỏ hàng');
+                return;
+            }
+            req.session.cart.forEach(async product => {
+                success = await db.addOrderDetail(orderID, customerID, product.productID , branch, product.cost, product.discount, product.quantity, product.total);
             });
+            
 
             req.session.cart = [];
             req.session.grandTotal = 0;
@@ -270,7 +304,7 @@ class SiteController {
         res.redirect('/sign-in');
     }
 
-    profile(req,res,next){
+    profile(req, res, next) {
         if (req.session.user) {
             res.render('profile', {
                 title: 'Thông tin cá nhân',

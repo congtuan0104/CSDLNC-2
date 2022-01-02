@@ -8,9 +8,11 @@ class OrdersController {
 
             if (orders) {
                 orders.forEach(order => {
-                    if (order.TinhTrang == 0) {
+                    if (order.TinhTrang == -1) {
+                        order.TinhTrang  = 'Đã huỷ đơn';
+                    }
+                    else if (order.TinhTrang == 0) {
                         order.TinhTrang = 'Đang chuẩn bị hàng';
-
                     }
                     else if (order.TinhTrang == 1) {
                         order.TinhTrang = 'Đang gửi hàng';
@@ -43,9 +45,12 @@ class OrdersController {
             const orderDetail = await db.getOrderDetail(req.params.orderID);
             const orderList = await db.getOrderList(req.params.orderID);
             const status = orderDetail.at(0).TinhTrang;
-            if (orderDetail.at(0).TinhTrang == 0) {
-                orderDetail.at(0).TinhTrang  = 'Đang chuẩn bị hàng';
+            if (orderDetail.at(0).TinhTrang == -1) {
+                orderDetail.at(0).TinhTrang  = 'Đã huỷ đơn';
             }
+            else if (orderDetail.at(0).TinhTrang == 0) {
+                orderDetail.at(0).TinhTrang  = 'Đang chuẩn bị hàng';
+            }           
             else if (orderDetail.at(0).TinhTrang  == 1) {
                 orderDetail.at(0).TinhTrang  = 'Đang gửi hàng';
             }
@@ -66,6 +71,36 @@ class OrdersController {
                 navP: () => 'navCustomer',
                 footerP: () => 'footer',
             })
+            return;
+        }
+        res.redirect('/sign-in');
+    }
+
+    async confirmOrder(req, res, next) {
+        if (req.session.user) {
+            const orderID = req.query.orderID;
+            const confirm = db.confirmOrder(orderID);
+            if(confirm==0){
+                res.send('Xác nhận thất bại');
+                return;
+            }
+            console.log('Xác nhận thanh toán thành công');
+            res.redirect('/my-orders');
+            return;
+        }
+        res.redirect('/sign-in');
+    }
+
+    async cancelOrder(req, res, next) {
+        if (req.session.user) {
+            const orderID = req.query.orderID;
+            const cancel = db.cancelOrder(orderID);
+            if(cancel==0){
+                res.send('Huỷ đơn thất bại');
+                return;
+            }
+            console.log('Huỷ đơn thành công');
+            res.redirect('/my-orders');
             return;
         }
         res.redirect('/sign-in');

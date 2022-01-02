@@ -24,7 +24,16 @@ const hbs = handlebars.create({
                 return option.fn(this)
             }
             return option.inverse(this)
-        }
+        },
+
+        sum(s1,s2){
+            return parseInt(s1)+parseInt(s2);
+        },
+
+        sub(s1,s2){
+            return parseInt(s1)-parseInt(s2);
+        },
+
     }
 })
 

@@ -60,7 +60,7 @@
                     {{#each orderList}}
                     <div class="text-95 text-secondary-d3">
                         <div class="row mb-2 mb-sm-0 py-25">
-                            <div class="d-none d-sm-block col-1">{{@index}}</div>
+                            <div class="d-none d-sm-block col-1">{{sum @index 1}}</div>
                             <div class="col-3 text-left">{{this.TenSP}}</div>
                             <div class="col-2">{{this.SoLuong}}</div>
                             <div class="col-2">{{this.GiaBan}}đ</div>
@@ -97,7 +97,7 @@
                             {{#each orderDetail}}
                             <div class="row mb-2">
                                 <div class="col">
-                                    <a href="/confirmOrder?{{this.MaHD}}" class="btn btn-lg btn-success btn-block"
+                                    <a href="/my-orders/confirmOrder?orderID={{this.MaHD}}" class="btn btn-lg btn-success btn-block"
                                         role="button" aria-pressed="true">XÁC NHẬN</a>
                                 </div>
                                 <div class="col">
@@ -115,7 +115,7 @@
                                         value="XÁC NHẬN"></input>
                                 </div>
                                 <div class="col">
-                                    <a href="/cancelOrder?{{this.MaHD}}" class="btn btn-lg btn-danger btn-block"
+                                    <a href="/my-orders/cancelOrder?orderID={{this.MaHD}}" class="btn btn-lg btn-danger btn-block"
                                         role="button" aria-pressed="true">HUỶ ĐƠN</a>
                                 </div>
 

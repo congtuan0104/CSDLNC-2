@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/congtuan0104/Do_An_2_CSDLNC.git"
+    "url": "git+https://github.com/congtuan0104/CSDLNC-2.git"
   },
   "author": "Nhóm 1",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/congtuan0104/Do_An_2_CSDLNC/issues"
+    "url": "https://github.com/congtuan0104/CSDLNC-2/issues"
   },
-  "homepage": "https://github.com/congtuan0104/Do_An_2_CSDLNC#readme",
+  "homepage": "https://github.com/congtuan0104/CSDLNC-2#readme",
   "dependencies": {
     "express": "^4.17.1",
     "express-handlebars": "^6.0.2",

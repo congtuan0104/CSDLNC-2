@@ -1,0 +1,145 @@
+<div class="container-md px-5 py-3 text-center" style="background-color: white;border-radius:25px">
+
+    <div class="row align-items-center border-bottom py-3">
+        <div class="col-1">ID</div>
+        <div class="col-1">Ảnh</div>
+
+        <div class="col">
+            <div class="row">Sản phẩm</div>
+        </div>
+
+        <div class="col-2"> Giá bán</div>
+        <div class="col-2"> Số lượng tồn</div>
+        <div class="col-2"> Thương hiệu</div>
+        <div class="col-1">Sửa</div>
+        <div class="col-1">Xoá</div>
+    </div>
+    {{#each products}}
+    <div class="row align-items-center border-bottom py-2">
+        <div class="col-1">{{this.MaSP}}</div>
+        <div class="col-1">
+            <img src="/img/product-mix3.png" width="100%" alt="">
+        </div>
+
+        <div class="col">
+            <div class="row">{{this.TenSP}}</div>
+        </div>
+
+        <div class="col-2">{{this.GiaBan}}đ</div>
+        <div class="col-2">{{this.TongSoLuongTon}}</div>
+        <div class="col-2">{{this.TenThuongHieu}}</div>
+        <div class="col-1">
+            <a href="/admin/products/{{this.MaSP}}">
+                <i class='bx bx-edit' style="font-size: 30px;"></i>
+            </a>
+        </div>
+        <div class="col-1 text-danger">
+            <span>
+                <a style="text-decoration:none;font-size:30px" class="text-danger"
+                    href="/admin/removeProduct?productID={{this.MaSP}}"><i class="bx bxs-x-square"></i></a>
+            </span>
+        </div>
+
+    </div>
+    {{/each}}
+
+
+
+    <div class="row text-center mt-5 mb-3">
+        <div class="col">
+            <ul class="pagination justify-content-center">
+                <li class="page-item{{#eq page 1}} disabled{{/eq}}">
+                    <a class="page-link" href="/admin/products?page={{sub page 1}}">Trước</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="/admin/products?page=1">1</a></li>
+                <li class="page-item"><a class="page-link" href="/admin/products?page=2">2</a></li>
+                <li class="page-item"><a class="page-link" href="/admin/products?page=3">3</a></li>
+                <li class="page-item"><a class="page-link" href="/admin/products?page=4">4</a></li>
+                <li class="page-item"><a class="page-link" href="/admin/products?page=5">5</a></li>
+                <li class="page-item"><a class="page-link" href="/admin/products?page=6">6</a></li>
+                <li class="page-item{{#eq page 6}} disabled{{/eq}}">
+                    <a class="page-link" href="/admin/products?page={{sum page 1}}">Tiếp</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="fixed-bottom" style="bottom: 10px; right:10px">
+        <button class="btn btn-primary float-right rounded-circle justify-content-center" 
+        aria-controls="collapseExample" data-toggle="modal" data-target="#dialog1">
+            <i class="fa fa-plus text-white" aria-hidden="true" style="font-size:30px;"></i>
+        </button>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="dialog1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" action="/admin/addProduct">
+                <div class="modal-header text-primary text-uppercase">
+                    <h5 class="modal-title">Thêm sản phẩm</h5>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group row">
+
+                        <div class="col-sm-12">
+                            <label for="">Tên sản phẩm</label>
+                            <input type="text" class="form-control" id="productName" name="productName"
+                                placeholder="Nhập tên sản phẩm" required>
+                        </div>
+                        <div class="col-sm-12 mt-4">
+                            <label for="">Loại sản phẩm</label>
+                            <select class="form-control" name="type" required>
+                                <option selected value="">Chọn loại sản phẩm</option>
+                                {{#each type}}
+                                <option value="{{this.MaLoai}}">{{this.TenLoai}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 mt-4">
+                            <label for="">Thương hiệu</label>
+                            <select class="form-control" name="brand" required>
+                                <option selected value="">Chọn thương hiệu</option>
+                                {{#each brand}}
+                                <option value="{{this.MaThuongHieu}}">{{this.TenThuongHieu}}</option>
+                                {{/each}}
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 mt-4">
+                            <label for="cost">Giá bán</label>
+                            <div class="input-group">
+
+                                <input type="number" class="form-control" name="price" id="price" min="1000" required>
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon3">VNĐ</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 mt-4">
+                            <label for="expiry">Hạn sử dụng (nếu có)</label>
+                            <div class="input-group mb-3">
+                                <input type="number" class="form-control" name="expiry" id="expiry" min="0">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon3">tháng</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Lưu lại</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
