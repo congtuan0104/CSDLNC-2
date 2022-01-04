@@ -1,0 +1,67 @@
+<div class="container-md px-5 py-3 text-center" style="background-color: white;border-radius:25px">
+
+    <div class="row align-items-center border-bottom py-3">
+        <div class="col-1">ID</div>
+        <div class="col-1">Ảnh</div>
+
+        <div class="col">
+            <div class="row">Sản phẩm</div>
+        </div>
+
+        <div class="col-2"> Giá bán</div>
+        <div class="col-2"> Thương hiệu</div>
+        <div class="col-2"> Số lượng tồn</div>
+        <div class="col-2"> Đã bán tháng này</div>
+    </div>
+    {{#each products}}
+    <a href="/manager/products/{{this.MaSP}}" class="text-decoration-none text-dark">
+
+        <div class="row align-items-center border-bottom py-2">
+            <div class="col-1">{{this.MaSP}}</div>
+            <div class="col-1">
+                <img src="/img/product-mix3.png" width="100%" alt="">
+            </div>
+
+            <div class="col">
+                <div class="row">{{this.TenSP}}</div>
+            </div>
+
+            <div class="col-2">{{this.GiaBan}}đ</div>
+            <div class="col-2">{{this.TenThuongHieu}}</div>
+            <div class="col-2">{{this.SLTon}}</div>
+
+            <div class="col-2">
+                {{this.SLBan}}
+            </div>
+
+
+        </div>
+    </a>
+    {{/each}}
+
+
+
+    <div class="row text-center mt-5 mb-3">
+        <div class="col">
+            <ul class="pagination justify-content-center">
+                <li class="page-item{{#eq page 1}} disabled{{/eq}}">
+                    <a class="page-link" href="/manager/products?page={{sub page 1}}">Trước</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="/manager/products?page=1">1</a></li>
+                <li class="page-item"><a class="page-link" href="/manager/products?page=2">2</a></li>
+                <li class="page-item"><a class="page-link" href="/manager/products?page=3">3</a></li>
+                <li class="page-item"><a class="page-link" href="/manager/products?page=4">4</a></li>
+                <li class="page-item"><a class="page-link" href="/manager/products?page=5">5</a></li>
+                <li class="page-item"><a class="page-link" href="/manager/products?page=6">6</a></li>
+                <li class="page-item{{#eq page 6}} disabled{{/eq}}">
+                    <a class="page-link" href="/manager/products?page={{sum page 1}}">Tiếp</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+
+
+

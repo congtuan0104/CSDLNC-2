@@ -1,0 +1,207 @@
+<div class="row mx-2">
+    <div class="col-5 mx-3 mb-4 h-100"
+        style="border-radius:25px;min-width:350px;">
+        <div class="row">
+            <img src="/img/product-mix3.png" width="100%" style="border-radius:25px;" alt="">
+        </div>
+
+    </div>
+
+    <div class="col">
+        <div class="row pt-3 pb-2 px-4 mx-1 mb-4" style="background-color: white; border-radius:25px;min-width:350px;">
+            <div class="col">
+                <div class="row mb-3">
+                    <div class="col">
+                        {{#each product}}
+                        <h3 class="text-primary text-center">
+                            THÔNG TIN SẢN PHẨM (CHI NHÁNH {{this.MaCN}})
+                        </h3>
+                        {{/each}}
+                    </div>
+                </div>
+
+
+                {{#each product}}
+                <input type="hidden" name="productID" value="{{this.MaSP}}">
+                <div class="form-group row">
+                    <label for="inputName" class="col-sm-4 col-form-label">Sản phẩm</label>
+                    <div class="col-sm-8">
+                        <input type="text" readonly class="form-control" id="inputName" name="productName"
+                            value="{{this.TenSP}}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEx" class="col-sm-4 col-form-label">Hạn sử dụng</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <input type="number" class="form-control" readonly value="{{this.HanSuDung}}"
+                                aria-label="inputEx" name="expiry" aria-describedby="basic-addon1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">tháng</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="" class="col-sm-4 col-form-label">Loại SP</label>
+
+                    <div class="col-sm-8">
+                        <input type="text" readonly class="form-control" id="inputName" name="productName"
+                            value="{{this.TenLoai}}">
+                    </div>
+
+                </div>
+
+                <div class="form-group row">
+                    <label for="" class="col-sm-4 col-form-label">Thương hiệu</label>
+
+                    <div class="col-sm-8">
+                        <input type="text" readonly class="form-control" id="inputName" name="productName"
+                            value="{{this.TenThuongHieu}}">
+                    </div>
+
+                </div>
+
+
+                <div class="form-group row">
+                    <label for="inputCost" class="col-sm-4 col-form-label">Giá bán</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <input type="number" class="form-control" value="{{this.GiaBan}}" aria-label="inputCost"
+                                readonly name="price" aria-describedby="basic-addon1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">VNĐ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+                {{#if discount}}
+                <div class="form-group row">
+                    <label for="discount" class="col-sm-4 col-form-label">Giảm giá</label>
+                    <div class="col-sm-8">
+                        {{#each discount}}
+                        <div class="input-group">
+                            <input type="number" class="form-control" value="{{this.Giam}}" aria-label="discount"
+                                readonly name="discount" aria-describedby="basic-addon1">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">VNĐ</span>
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+
+                {{/if}}
+                {{#each product}}
+                <div class="form-group row">
+                    <label for="" class="col-sm-4 col-form-label">Tồn kho</label>
+                    <div class="col-sm-8">
+                        <input type="text" readonly class="form-control" id="quantity" name="quantity"
+                            value="{{this.SLTon}}">
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="" class="col-sm-4 col-form-label">Đã bán tháng này</label>
+                    <div class="col-sm-8">
+                        <input type="text" readonly class="form-control" id="quantity" name="quantity"
+                            value="{{this.SLBan}}">
+                    </div>
+                </div>
+                {{/each}}
+                <div class="form-group row text-center mt-4">
+                    <div class="col">
+                        <a class="btn btn-primary h-100 py-2" style="width:100%" aria-controls="collapseExample"
+                            data-toggle="modal" data-target="#dialog1">Cập nhật số lượng tồn</a>
+                    </div>
+                    <div class="col">
+                        <a class="btn btn-secondary h-100 py-2" style="width:100%" aria-controls="collapseExample"
+                            data-toggle="modal" data-target="#dialog2">Lịch sử nhập sản phẩm</a>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dialog1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" action="/manager/updateQuantity">
+                <div class="modal-header text-primary text-uppercase">
+                    <h5 class="modal-title">NHẬP THÊM SẢN PHẨM VÀO CHI NHÁNH</h5>
+                </div>
+                {{#each product}}
+                <input type="hidden" name="productID" value="{{this.MaSP}}">
+                <input type="hidden" name="branchID" value="{{this.MaCN}}">
+                {{/each}}
+                <div class="modal-body">
+                    <div class="form-group row">
+
+                        <div class="col-sm-12">
+                            {{#with today}}
+                            <label for="">Ngày nhập</label>
+                            <input type="date" class="form-control" id="date" name="date"
+                                value="{{this}}" required>
+                            {{/with}}
+                        </div>
+
+                        <div class="col-sm-12  mt-4">
+                            <label for="">Số lượng sản phẩm nhập vào</label>
+                            <input type="number" class="form-control" 
+                                name="quantity" min="1" value="1" aria-describedby="basic-addon1" required>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="dialog2" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header text-primary text-uppercase">
+                <h5 class="modal-title">LỊCH SỬ NHẬP HÀNG</h5>
+            </div>
+
+            <div class="modal-body text-center">
+                {{#if history}}
+                <div class="row align-items-center border-bottom py-3">
+                    <div class="col-3">Mã đợt</div>
+                    <div class="col-5">Ngày nhập</div>
+                    <div class="col-4">Số lượng</div>
+
+                </div>
+                {{#each history}}
+                <div class="row align-items-center border-bottom py-2">
+                    <div class="col-3">{{this.MADOT}}</div>
+                    <div class="col-5">{{this.NGAYNHAP}}</div>
+                    <div class="col-4">{{this.SOLUONG}}</div>
+                </div>
+                {{/each}}
+                {{else}}
+                Chưa có lịch sử nhập hàng
+                {{/if}}
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>

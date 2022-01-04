@@ -1,0 +1,38 @@
+<div class="container-md px-5 py-3 text-center" style="background-color: white;border-radius:25px">
+
+    <div class="row align-items-center border-bottom py-3">
+        <div class="col-4">Tháng</div>
+        <div class="col-4">Chỉ tiêu</div>
+        <div class="col-4">Tổng doanh thu</div>
+
+    </div>
+    {{#each turnover}}
+    <div class="row align-items-center border-bottom py-2">
+        <div class="col-4">{{this.Thang}}/{{this.Nam}}</div>
+        <div class="col-4">{{this.ChiTieu}}</div>
+        <div class="col-4">{{this.TongDoanhThu}}đ</div>
+
+    </div>
+    {{/each}}
+
+
+
+    <div class="row text-center mt-5 mb-3">
+        <div class="col">
+            <ul class="pagination justify-content-center">
+                <li class="page-item{{#eq page 1}} disabled{{/eq}}">
+                    <a class="page-link" href="/manager/turnover?page={{sub page 1}}">Trước</a>
+                </li>
+                <li class="page-item"><a class="page-link" href="/manager/turnover?page=1">1</a></li>
+                <li class="page-item"><a class="page-link" href="/manager/turnover?page=2">2</a></li>
+                <li class="page-item">
+                    <a class="page-link{{#eq page 2}} disabled{{/eq}}" href="/manager/turnover?page={{sum page 1}}">Tiếp</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+
+

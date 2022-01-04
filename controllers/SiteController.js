@@ -143,22 +143,25 @@ class SiteController {
         const staff = await db.verifyStaff(phone);
         if (staff) {
             console.log('Đăng nhập thành công');
-            req.session.staff = staff;
+            
             if (staff.at(0).LoaiNhanVien == 0) {
                 console.log('Nhân viên bán hàng');
+                req.session.staff = staff;
                 res.send(staff.at(0).TenNV);
                 return;
             }
+
             if (staff.at(0).LoaiNhanVien == 1) {
-                console.log('Quản lý chi nhánh');
-                res.send(staff.at(0).TenNV);
+                console.log('Quản lý chi nhánh');            
+                req.session.manager = staff;
+                res.redirect('/manager');
                 return;
             }
 
             if (staff.at(0).LoaiNhanVien == 2) {
                 console.log('Admin');
-                //res.send(staff.at(0).TenNV);
-                res.redirect('/admin')
+                req.session.admin = staff;
+                res.redirect('/admin');
                 return;
             }
 

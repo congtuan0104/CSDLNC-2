@@ -3,8 +3,8 @@ const db = require('../models/dbOperations');
 class AdminController {
     //[GET]/admin/
     async showDashboard(req, res, next) {
-        if (req.session.staff) {
-            const staff = req.session.staff;
+        if (req.session.admin) {
+            const admin= req.session.admin;
             const bestSeller = await db.getBestSeller();
             const recentOrder = await db.getRecentOrder();
             recentOrder.forEach(order => {
@@ -24,7 +24,7 @@ class AdminController {
             res.render('./Admin/dashboard',{
                 layout: 'AdminLayout',
                 title: 'Dashboard',
-                staff: staff,
+                admin: admin,
                 bestSeller: bestSeller,
                 recentOrder: recentOrder,
                 cssP:() => 'css',
@@ -37,8 +37,8 @@ class AdminController {
 
     //[GET]/admin/products
     async allProducts(req, res, next) {
-        if (req.session.staff) {
-            const staff = req.session.staff;
+        if (req.session.admin) {
+            const admin= req.session.admin;
             const type = await db.getAllType();
             const brand = await db.getAllBrand();
             let page;
@@ -56,7 +56,7 @@ class AdminController {
             res.render('./Admin/productList',{
                 layout: 'AdminLayout',
                 title: 'Sản phẩm',
-                staff: staff,
+                admin: admin,
                 brand: brand,
                 type: type,
                 page: page,
@@ -72,8 +72,8 @@ class AdminController {
 
     //[GET]/admin/search
     async search(req, res, next) {
-        if (req.session.staff) {
-            const staff = req.session.staff;
+        if (req.session.admin) {
+            const admin= req.session.admin;
             const productName = req.query.q;
             const products = await db.search2(productName);
             const type = await db.getAllType();
@@ -82,7 +82,7 @@ class AdminController {
             res.render('./Admin/productList',{
                 layout: 'AdminLayout',
                 title: 'Sản phẩm',
-                staff: staff,
+                admin: admin,
                 brand: brand,
                 type: type,
                 products: products,
@@ -97,7 +97,7 @@ class AdminController {
 
      //[POST]/admin/addProduct
      async addProduct(req, res) {
-        if (req.session.staff) {
+        if (req.session.admin) {
         
             const productName = req.body.productName;
             const type = req.body.type;
@@ -119,7 +119,7 @@ class AdminController {
 
     //[GET]/admin/removeProduct
     async removeProduct(req, res) {
-        if (req.session.staff) {
+        if (req.session.admin) {
         
             const productID = req.query.productID;
             const remove = await db.removeProduct(productID);
@@ -136,9 +136,9 @@ class AdminController {
 
     //[GET]/admin/product/:productID
     async productDetail(req, res, next) {
-        if (req.session.staff) {
+        if (req.session.admin) {
             const productID = req.params.productID;
-            const staff = req.session.staff;
+            const admin= req.session.admin;
             var type = await db.getAllType();
             const brand = await db.getAllBrand();
             const product = await db.getProductDetail(productID);
@@ -153,7 +153,7 @@ class AdminController {
             res.render('./Admin/productDetail',{
                 layout: 'AdminLayout',
                 title: 'Sản phẩm',
-                staff: staff,
+                admin: admin,
                 brand: brand,
                 type: type,
                 product: product,
@@ -170,7 +170,7 @@ class AdminController {
 
     //[POST]//admin/updateProduct
     async updateProduct(req, res, next) {
-        if (req.session.staff) {
+        if (req.session.admin) {
             const productID = req.body.productID;
             const productName = req.body.productName;
             const expiry = req.body.expiry;
@@ -191,7 +191,7 @@ class AdminController {
 
     //[POST]//admin/addDiscount
     async addDiscount(req, res, next) {
-        if (req.session.staff) {
+        if (req.session.admin) {
             const productID = req.body.productID;
             const discountRate = req.body.discountRate/100;
             const startDate = req.body.startDate;
@@ -211,7 +211,7 @@ class AdminController {
 
     //[POST]//admin/updateDiscount
     async updateDiscount(req, res, next) {
-        if (req.session.staff) {
+        if (req.session.admin) {
             console.log(req.body);
             const productID = req.body.productID;
             const discountRate = req.body.discountRate/100;
@@ -232,7 +232,7 @@ class AdminController {
 
     //[POST]//admin/removeDiscount
     async removeDiscount(req, res, next) {
-        if (req.session.staff) {
+        if (req.session.admin) {
 
             const productID = req.body.productID;
             const startDate = req.body.startDate;
@@ -252,8 +252,8 @@ class AdminController {
 
     //[GET]/admin/warehouse
     async warehouseEntryHistory(req, res) {
-        if (req.session.staff) {
-            const staff = req.session.staff;           
+        if (req.session.admin) {
+            const admin= req.session.admin;           
             let page;
             if(req.query.page){
                 page=req.query.page;
@@ -269,7 +269,7 @@ class AdminController {
             res.render('./Admin/warehouse',{
                 layout: 'AdminLayout',
                 title: 'Quản lý kho',
-                staff: staff,
+                admin: admin,
                 page: page,
                 batch: importHistory,
                 cssP:() => 'css',
@@ -283,8 +283,8 @@ class AdminController {
 
     //[GET]/admin/orders
     async allOrders(req, res, next) {
-        if (req.session.staff) {
-            const staff = req.session.staff;
+        if (req.session.admin) {
+            const admin= req.session.admin;
             let page;
             if(req.query.page){
                 page=req.query.page;
@@ -311,7 +311,7 @@ class AdminController {
             res.render('./Admin/orders',{
                 layout: 'AdminLayout',
                 title: 'Đơn hàng',
-                staff: staff,
+                admin: admin,
                 page: page,
                 orders: ordersList,
                 cssP:() => 'css',
@@ -325,8 +325,8 @@ class AdminController {
 
     //[GET]/admin/turnover
     async showTurnover(req, res, next) {
-        if (req.session.staff) {
-            const staff = req.session.staff;
+        if (req.session.admin) {
+            const admin= req.session.admin;
             let page;
             if(req.query.page){
                 page=req.query.page;
@@ -343,7 +343,7 @@ class AdminController {
             res.render('./Admin/turnover',{
                 layout: 'AdminLayout',
                 title: 'Doanh thu',
-                staff: staff,
+                admin: admin,
                 turnover: allTurnover,
                 cssP:() => 'css',
                 scriptP:() => 'script',
@@ -356,8 +356,8 @@ class AdminController {
 
     //[GET]/admin/statistic
     async statistic(req, res) {
-        if (req.session.staff) {
-            const staff = req.session.staff;
+        if (req.session.admin) {
+            const admin= req.session.admin;
             const month = new Date().getMonth() + 1;
             const year = new Date().getFullYear();
 
@@ -377,7 +377,7 @@ class AdminController {
             res.render('./Admin/statistic',{
                 layout: 'AdminLayout',
                 title: 'Thống kê',
-                staff: staff,
+                admin: admin,
                 month: month,
                 year: year,
                 turnover: allTurnover,

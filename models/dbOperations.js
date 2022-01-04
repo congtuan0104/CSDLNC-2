@@ -38,6 +38,25 @@ async function getProducts(page) {
     }
 }
 
+async function getProductBranch(branchID, page) {
+    try {
+        let pool = await sql.connect(config);
+        let products = await pool.request()
+            .input('startOffset', sql.Int, (page - 1) * 20)
+            .input('MaCN', sql.Int, branchID)
+            .query(`SELECT df.MaSP, df.TenSP, df.GiaBan, df.TenThuongHieu, df.SLTon , SLBan
+                FROM (SELECT s.MaSP, TenSP, GiaBan, TenThuongHieu, SLTon 
+                from SANPHAM s, THUONGHIEU t, SANPHAM_CHINHANH sp
+                where s.MaThuongHieu=t.MaThuongHieu AND s.MaSP = sp.MaSP AND MaCN=@MaCN) df
+                LEFT JOIN SANPHAM_TIEUTHU st ON df.MaSP=st.MaSP AND Thang=MONTH(GETDATE()) AND Nam=YEAR(GETDATE())
+                order by df.MaSP OFFSET @startOffset rows FETCH NEXT 20 rows ONLY`);
+        return products.recordset;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
 async function getProduct(productID) {
     try {
         let pool = await sql.connect(config);
@@ -103,6 +122,26 @@ async function getProductDetail(productID) {
         console.log(error);
     }
 }
+
+async function getProductDetail2(branchID, productID) {
+    try {
+        let pool = await sql.connect(config);
+        let product = await pool.request()
+            .input('MaSP', sql.Int, productID)
+            .input('MaCN', sql.Int, branchID)
+            .query(`SELECT df.MaSP, df.TenSP, df.TenLoai,df.HanSuDung,df.GiaBan,df.TenThuongHieu,df.SLTon, df.MaCN, SLBan
+                    FROM (SELECT SP.MaSP,TenSP,TenLoai,HanSuDung,GiaBan,TenThuongHieu,SLTon, sc.MaCN
+                    FROM SANPHAM SP,LOAISANPHAM LSP, THUONGHIEU TH, SANPHAM_CHINHANH sc
+                    WHERE SP.MASP = @MaSP AND SP.MaLoai = LSP.MaLoai AND TH.MaThuongHieu=SP.MaThuongHieu
+                    AND SP.MaSP = SC.MaSP AND sc.MaCN=@MaCN) df
+                    LEFT JOIN SANPHAM_TIEUTHU st ON df.MaSP=st.MaSP AND Thang=MONTH(GETDATE()) AND Nam=YEAR(GETDATE())`);
+        return product.recordset;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
 
 
 async function getProductQuantity(productID) {
@@ -286,27 +325,6 @@ async function addShoppingHistory(customerID, productID) {
     }
 }
 
-async function increaseRevenue(storeID, money) {
-    try {
-        let pool = await sql.connect(config);
-        let revenue = await pool.request()
-        revenue.input('MaCN', sql.Int, storeID)
-        revenue.input('money', sql.Int, money)
-        revenue.query(
-            `IF NOT EXISTS(SELECT * FROM CHITIEU_DOANHTHU WHERE DT_Thang=MONTH(GETDATE()) AND DT_Nam=YEAR(GETDATE())
-            BEGIN
-                INSERT CHITIEU_DOANHTHU(DT_Thang,DT_Thang,DoanhThu,MaCN) VALUES(MONTH(GETDATE()), YEAR(GETDATE()),0)
-            END
-            DECLARE @doanhthu MONEY = (SELECT DoanhThu FROM CHITIEU_DOANHTHU WHERE DT_Thang=MONTH(GETDATE()) AND DT_Nam=YEAR(GETDATE())
-            SET @doanhthu = @doanhthu + @money
-            UPDATE CHITIEU_DOANHTHU SET DOANHTHU = @doanhthu WHERE DT_Thang=MONTH(GETDATE()) AND DT_Nam=YEAR(GETDATE()`);
-        return 1;
-    }
-    catch (error) {
-        console.log(error);
-        return 0;
-    }
-}
 
 async function showHistory(customerID) {
     try {
@@ -397,7 +415,7 @@ async function addProduct(productName, type, brand, price, expiry) {
         let pool = await sql.connect(config);
         let product = await pool.request();
         product.input('TenSP', sql.NVarChar, productName);
-        product.input('LoaiSP', sql.INT, type);
+        product.input('LoaiSP', sql.Int, type);
         product.input('ThuongHieu', sql.Int, brand);
         product.input('Gia', sql.Money, price);
         product.input('HSD', sql.Int, expiry);
@@ -438,9 +456,10 @@ async function getPriceHistory(productID) {
         let pool = await sql.connect(config);
         let history = await pool.request()
             .input('MaSP', sql.Int, productID)
-            .query(`SELECT convert(varchar(10), ThoiGian, 105) AS NgayCapNhat,
+            .query(`SELECT CONVERT(VARCHAR(10), ThoiGian, 105) AS NgayCapNhat,
                 CONVERT(VARCHAR, ThoiGian, 108) AS GioCapNhat,
-                GiaBan, MaSP FROM VETGIA WHERE MaSP=@MaSP`);
+                GiaBan, MaSP FROM VETGIA WHERE MaSP=@MaSP
+                ORDER BY ThoiGian DESC`);
         if (history.recordset.length == 0) return null;
         return history.recordset;
     }
@@ -578,6 +597,57 @@ async function getImportHistory(page) {
     }
 }
 
+async function getBatchID(branchID, batch) {
+    try {
+        let pool = await sql.connect(config);
+        let ID = await pool.request()
+            .input('offset', sql.Int, batch)
+            .input('MaCN', sql.Int, branchID)
+            .query(`SELECT MaDot, CONVERT(VARCHAR(10),NGAYNHAP,105) AS NgayNhap
+                    FROM LS_NHAP_KHO D
+                    WHERE D.MaCN=@MaCN
+                    ORDER BY D.NgayNhap DESC OFFSET @offset ROWS FETCH NEXT 1 rows ONLY`);
+
+        return ID.recordset;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+async function getImportHistory3(batchID) {
+    try {
+        let pool = await sql.connect(config);
+        let history = await pool.request()
+            .input('MaDot', sql.Int, batchID)
+            .query(`SELECT D.MADOT,CONVERT(VARCHAR(10),NGAYNHAP,105) AS NGAYNHAP, TENSP, SOLUONG, (GIABAN*SOLUONG) AS GIATRI
+                    FROM LS_NHAP_KHO D, CHITIET_NHAPHANG CT, SANPHAM S
+                    WHERE D.MADOT=CT.MADOT AND CT.MASP=S.MASP AND D.MADOT=@MaDot`);
+        return history.recordset;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+async function getImportHistory2(branchID, productID) {
+    try {
+        let pool = await sql.connect(config);
+        let history = await pool.request()
+            .input('MaCN', sql.Int, branchID)
+            .input('MaSP', sql.Int, productID)
+            .query(`SELECT D.MADOT,CONVERT(VARCHAR(10),NGAYNHAP,105) AS NGAYNHAP, SOLUONG
+                    FROM LS_NHAP_KHO D, CHITIET_NHAPHANG CT, SANPHAM S
+                    WHERE D.MADOT=CT.MADOT AND CT.MASP=S.MASP
+                    AND MaCN=@MaCN AND S.MaSP=@MaSP
+                    ORDER BY MADOT DESC`);
+        return history.recordset;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
 
 async function getAllOrders(page) {
     try {
@@ -660,12 +730,50 @@ async function getRecentOrder() {
     }
 }
 
+
+
+async function getRecentOrderBranch(macn) {
+    try {
+        let pool = await sql.connect(config);
+        let orders = await pool.request()
+            .input('MaCN', sql.Int, macn)
+            .query(`SELECT TOP 8 CONVERT(VARCHAR(10),NgayLap,105) AS NgayLap,
+                TinhTrang, TenKH, TongTien, MaHD
+                FROM HOADON h, KHACHHANG k
+                WHERE h.MaKH = k.MaKH AND MaCN = @MaCN
+                ORDER BY MaHD DESC`);
+        return orders.recordset;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+async function updateQuantity(branchID, productID, date, quantity) {
+    try {
+        let pool = await sql.connect(config);
+        let update = await pool.request();
+        update.input('macn', sql.Int, branchID);
+        update.input('masp', sql.Int, productID);
+        update.input('ngay', sql.Date, date);
+        update.input('soluong', sql.Int, quantity);
+        update.execute('sp_CAP_NHAT_SLTON');
+
+        return 1;
+    }
+    catch (error) {
+        console.log(error);
+        return 0;
+    }
+}
+
 module.exports = {
     getAllProducts: getAllProducts,
     getProducts: getProducts,
     getProduct: getProduct,
     get10Products: get10Products,
     getProductDetail: getProductDetail,
+    getProductDetail2: getProductDetail2,
     addNewUser: addNewUser,
     verifyCustomer: verifyCustomer,
     verifyStaff: verifyStaff,
@@ -696,9 +804,15 @@ module.exports = {
     cancelOrder: cancelOrder,
     getAllOrders: getAllOrders,
     showTurnover: showTurnover,
-    increaseRevenue: increaseRevenue,
     getOrderID: getOrderID,
     getBestSeller: getBestSeller,
     getBestSeller2: getBestSeller2,
     getRecentOrder: getRecentOrder,
+    getRecentOrderBranch: getRecentOrderBranch,
+    getProductBranch: getProductBranch,
+    getImportHistory2: getImportHistory2,
+    getImportHistory3: getImportHistory3,
+    updateQuantity: updateQuantity,
+    getBatchID: getBatchID,
+
 }

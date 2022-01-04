@@ -1,0 +1,101 @@
+<div class="container-md px-5 py-3 text-center" style="background-color: white;border-radius:25px">
+    <h3 class="text-primary">LỊCH SỬ NHẬP HÀNG</h3>
+    <h6>
+    {{#each batchID}}
+        Ngày nhập: {{this.NgayNhap}} 
+    {{/each}}
+     | 
+    {{#each manager}}
+       Chi nhánh: {{this.MaCN}}
+    {{/each}}
+    </h6>
+    <hr>
+    
+    <div class="row align-items-center border-bottom py-3">
+        <div class="col ">STT</div>
+        <div class="col text-left">Sản phẩm</div>
+        <div class="col"> Số lượng</div>
+        <div class="col text-right">Giá trị</div>
+
+    </div>
+    {{#each history}}
+    <div class="row align-items-center border-bottom py-2">
+        <div class="col">{{sum @index 1}}</div>
+        <div class="col text-left">{{this.TENSP}}</div>
+        <div class="col">{{this.SOLUONG}}</div>
+        <div class="col text-right">{{this.GIATRI}}đ</div>
+ 
+    </div>
+    {{/each}}
+    <div class="row mt-3">
+        <div class="col-10 text-right text-primary">
+            <h5>Tổng giá trị: </h5>
+        </div>
+        {{#with value}}
+        <div class="col-2 text-right">{{this}}đ</div>
+        {{/with}}
+    </div>
+    
+
+
+    <div class="row text-center mt-5 mb-3">
+        <div class="col">
+            <ul class="pagination justify-content-center">
+                <li class="page-item{{#eq batch 0}} disabled{{/eq}}">
+                    <a class="page-link" href="/manager/warehouse?batch={{sub batch 1}}">Trước</a>
+                </li>
+
+                <li class="page-item{{#eq batch 6}} disabled{{/eq}}">
+                    <a class="page-link" href="/manager/warehouse?batch={{sum batch 1}}">Tiếp</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="fixed-bottom" style="bottom: 10px; right:10px">
+        <button class="btn btn-primary float-right rounded-circle justify-content-center" 
+        aria-controls="collapseExample" data-toggle="modal" data-target="#dialog1">
+            <i class="fa fa-plus text-white" aria-hidden="true" style="font-size:30px;"></i>
+        </button>
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="dialog1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="post" action="/admin/import">
+                <div class="modal-header text-primary text-uppercase">
+                    <h5 class="modal-title">NHẬP HÀNG</h5>
+                </div>
+
+                <div class="modal-body">
+                    <div class="form-group row">
+
+                        <div class="col-sm-8">
+                            <label for="">Mã sản phẩm</label>
+                            <input type="text" class="form-control" id="productID" name="productID"
+                                placeholder="Nhập mã sản phẩm" required>
+                        </div>
+                        
+
+                        <div class="col-sm-4">
+                            <label for="expiry">Số lượng</label>
+                            <div class="input-group mb-3">
+                                <input type="number" class="form-control" value="1" name="expiry" id="quantity" min="1">                              
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Lưu lại</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
