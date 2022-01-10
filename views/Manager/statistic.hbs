@@ -11,7 +11,7 @@
         <div class="row align-items-center border-bottom py-2">
             <div class="col-4">{{this.Thang}}/{{this.Nam}}</div>
             <div class="col-4">{{this.ChiTieu}}</div>
-            <div class="col-4">{{this.TongDoanhThu}}đ</div>
+            <div class="col-4">{{this.DoanhThu}}đ</div>
 
         </div>
         {{/each}}
@@ -37,10 +37,10 @@
 
     <div class="container-md px-5 py-3 text-center" style="background-color: white;border-radius:25px">
         <h3 class="text-primary">
-            TOP 20 SẢN PHẨM BÁN CHẠY THÁNG {{#with month}}{{this}}{{/with}}-{{#with year}}{{this}}{{/with}}
+            TOP SẢN PHẨM BÁN CHẠY THÁNG {{#with month}}{{this}}{{/with}}-{{#with year}}{{this}}{{/with}}
             </h3>
         <div class="row align-items-center border-bottom py-3">
-            <div class="col-1">ID</div>
+            <div class="col-1">Top</div>
             <div class="col-1">Ảnh</div>
 
             <div class="col">
@@ -55,7 +55,7 @@
         </div>
         {{#each products}}
         <div class="row align-items-center border-bottom py-2">
-            <div class="col-1">{{this.MaSP}}</div>
+            <div class="col-1">{{sum @index 1}}</div>
             <div class="col-1">
                 <img src="/img/product-mix3.png" width="100%" alt="">
             </div>
@@ -65,7 +65,7 @@
             </div>
 
             <div class="col-2">{{this.GiaBan}}đ</div>
-            <div class="col-2">{{this.TongSoLuongTon}}</div>
+            <div class="col-2">{{this.SLTon}}</div>
             <div class="col-2">{{this.SLBan}}</div>
             <div class="col-1">
                 <a href="/manager/products/{{this.MaSP}}">

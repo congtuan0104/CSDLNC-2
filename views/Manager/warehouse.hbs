@@ -19,7 +19,7 @@
 
     </div>
     {{#each history}}
-    <div class="row align-items-center border-bottom py-2">
+    <div class="row align-items-center border-bottom py-4">
         <div class="col">{{sum @index 1}}</div>
         <div class="col text-left">{{this.TENSP}}</div>
         <div class="col">{{this.SOLUONG}}</div>
@@ -32,7 +32,7 @@
             <h5>Tổng giá trị: </h5>
         </div>
         {{#with value}}
-        <div class="col-2 text-right">{{this}}đ</div>
+        <h5 class="col-2 text-right text-danger">{{this}}đ</h5>
         {{/with}}
     </div>
     

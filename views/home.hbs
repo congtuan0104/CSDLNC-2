@@ -1,46 +1,86 @@
-
-<div class="mt-4">
-    <div class="container">
-        <div class="row">
-            {{#each products}}
-            <div class="col-sm-6 col-lg-3 mt-4 px-0">
-                <div class="card h-100 border-2 border-danger ">
-                    <a href="/products/{{this.MaSP}}">
-                        <img src="/img/product-mix3.png" class="card-img-top" alt="Hình minh hoạ">
-                    </a>
-                    <div class="card-body">
-                        <a class="text-decoration-none" href="/products/{{this.MaSP}}">
-                            <h5 class="card-title text-left text-primary">{{this.TenSP}}</h5>
-                        </a>
-
-                        <h6 class="card-text text-left text-danger "><b class="money">{{this.GiaBan}}đ</b></h6>
+<div class="container mt-3">
+    <div class="row">
+        <div class="col-9" style="padding: 0 10px;">
+            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel"
+                style="border: 1px solid red; border-radius:20px;">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="/img/banner1.png" class="d-block w-100" style="border-radius: 20px;" alt="banner1">
                     </div>
-                    <div class="card-footer">
-                        <a href="/addToCart?productID={{this.MaSP}}&q=1" class="btn btn-lg btn-danger btn-block" role="button" aria-pressed="true">CHỌN
-                            MUA</a>
+                    <div class="carousel-item">
+                        <img src="/img/banner2.png" class="d-block w-100" style="border-radius: 20px;" alt="banner2">
+                    </div>
+                    <div class="carousel-item">
+                        <img src="/img/banner3.png" class="d-block w-100" style="border-radius: 20px;" alt="banner3">
                     </div>
                 </div>
+                <button class="carousel-control-prev" type="button" data-target="#carouselExampleIndicators"
+                    data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-target="#carouselExampleIndicators"
+                    data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </button>
             </div>
-            {{/each}}
-        </div>
 
-        <div class="row text-center mt-5 mb-3">
-        <div class="col">
-            <ul class="pagination justify-content-center">
-            <li class="page-item{{#eq page 1}} disabled{{/eq}}">
-                <a class="page-link" href="/?page={{sub page 1}}">Trước</a>
-            </li>
-            <li class="page-item"><a class="page-link" href="/?page=1">1</a></li>
-            <li class="page-item"><a class="page-link" href="/?page=2">2</a></li>
-            <li class="page-item"><a class="page-link" href="/?page=3">3</a></li>
-            <li class="page-item"><a class="page-link" href="/?page=4">4</a></li>
-            <li class="page-item"><a class="page-link" href="/?page=5">5</a></li>
-            <li class="page-item"><a class="page-link" href="/?page=6">6</a></li>
-            <li class="page-item{{#eq page 6}} disabled{{/eq}}">
-                <a class="page-link" href="/?page={{sum page 1}}">Tiếp</a>
-            </li>
-        </ul>
+        </div>
+        <div class="col-3" style="padding: 0 10px;">
+            <img src="/img/poster.png" class="d-block w-100" style="border-radius: 22px;" alt="poster">
         </div>
     </div>
+
+    <div class="row">
+        {{#each products}}
+        <div class="col-sm-6 col-lg-3 mt-4 px-0">
+            <div class="card h-100 border-2 border-danger ">
+                <a href="/products/{{this.MaSP}}">
+                    <img src="/img/product-mix3.png" class="card-img-top" alt="Hình minh hoạ">
+                </a>
+                <div class="card-body">
+                    <a class="text-decoration-none" href="/products/{{this.MaSP}}">
+                        <h5 class="card-title text-left text-primary">{{this.TenSP}}</h5>
+                    </a>
+
+                    <h6 class="card-text text-left text-danger "><b class="money">{{this.GiaBan}}đ</b></h6>
+                </div>
+                <div class="card-footer">
+                    <a href="/addToCart?productID={{this.MaSP}}&q=1" class="btn btn-lg btn-danger btn-block"
+                        role="button" aria-pressed="true">CHỌN
+                        MUA</a>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+
+    <div class="row text-center mt-5 mb-3">
+        <div class="col">
+            <ul class="pagination justify-content-center">
+                <li class="page-item{{#eq page 1}} disabled{{/eq}}">
+                    <a class="page-link" href="/?page=1"><<</a>
+                </li>
+                <li class="page-item{{#eq page 1}} disabled{{/eq}}">
+                    <a class="page-link" href="/?page={{sub page 1}}"><</a>
+                </li>
+                {{#each pageList}}
+                <li class="page-item {{#ifStr this page}} disabled{{/ifStr}}"><a class="page-link" href="/?page={{this}}">{{this}}</a></li>
+                {{/each}}
+                <li class="page-item{{#eq page numberOfPage}} disabled{{/eq}}">
+                    <a class="page-link" href="/?page={{sum page 1}}">></a>
+                </li>
+                <li class="page-item{{#eq page numberOfPage}} disabled{{/eq}}">
+                    <a class="page-link" href="/?page={{numberOfPage}}">>></a>
+                </li>
+            </ul>
+        </div>
+
     </div>
 </div>

@@ -41,15 +41,26 @@ class AdminController {
             const admin= req.session.admin;
             const type = await db.getAllType();
             const brand = await db.getAllBrand();
-            let page;
-            if(req.query.page){
-                page=req.query.page;
+            const page = parseInt(req.query.page) || 1;
+            const numberOfPage = await db.getNumberOfPage('SANPHAM');
+
+            var pageList = [];
+            if (numberOfPage <= 7) {
+                for (var i = 1; i <= numberOfPage; i++) {
+                    pageList.push(i);
+                }
             }
-            else{
-                page=1;
-            }
-            if(page<1){
-                page=1;
+            else {
+
+                for (var i = page - 3; i < page; i++) {
+                    if (i < 1) continue;
+                    pageList.push(i);
+                }
+
+                for (var i = page; i <= page + 3; i++) {
+                    if (i > numberOfPage) continue;
+                    pageList.push(i);
+                }
             }
             const productsList = await db.getProducts(page);
              
@@ -60,6 +71,8 @@ class AdminController {
                 brand: brand,
                 type: type,
                 page: page,
+                numberOfPage: numberOfPage,
+                pageList: pageList,
                 products: productsList,
                 cssP:() => 'css',
                 scriptP:() => 'script',
@@ -249,6 +262,72 @@ class AdminController {
         res.redirect('/sign-in');
     }
 
+    //[GET]/admin/staff
+    async staff(req, res, next) {
+        if (req.session.admin) {
+            const admin = req.session.admin;
+            const staffList = await db.getAllStaff();
+            staffList.forEach(staff => {
+                if(staff.LoaiNhanVien==0){
+                    staff.LoaiNhanVien='Nhân viên bán hàng';
+                }
+                else{
+                    staff.LoaiNhanVien='Trưởng chi nhánh';
+                }
+            });
+
+            res.render('./Admin/staff', {
+                layout: 'AdminLayout',
+                title: 'Nhân viên',
+                admin: admin,
+                staff: staffList,
+                cssP: () => 'css',
+                scriptP: () => 'script',
+            });
+            return;
+        }
+        res.redirect('/sign-in');
+    }
+
+    //[GET]/admin/staff/staffID
+    async staffDetail(req, res, next) {
+        if (req.session.admin) {
+            const admin = req.session.admin;
+            const staffID = req.params.staffID;
+            const staff = await db.getStaffDetail(staffID);
+            if(staff.at(0).LoaiNhanVien==0){
+                staff.at(0).LoaiNhanVien='Nhân viên bán hàng';
+            }
+            else{
+                staff.at(0).LoaiNhanVien='Quản lý chi nhánh';
+            }
+            const salaryHistory = await db.getSalaryHistory(staffID);
+            
+            salaryHistory.forEach(element => {
+                element.BiTru= element.SoNgayNghiTrongThang*380000;
+                element.HieuSuat = element.DoanhThu/element.ChiTieu;
+                if(element.DoanhThu>element.ChiTieu){
+                    element.Thuong = 200000;
+                }
+                else{
+                    element.Thuong = 0;
+                }
+            });
+
+
+            res.render('./Admin/staffDetail', {
+                layout: 'AdminLayout',
+                title: 'Nhân viên',
+                admin: admin,
+                staff: staff,
+                salaryHistory: salaryHistory,
+                cssP: () => 'css',
+                scriptP: () => 'script',
+            });
+            return;
+        }
+        res.redirect('/sign-in');
+    }
 
     //[GET]/admin/warehouse
     async warehouseEntryHistory(req, res) {

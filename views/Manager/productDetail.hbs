@@ -34,7 +34,7 @@
                     <label for="inputEx" class="col-sm-4 col-form-label">Hạn sử dụng</label>
                     <div class="col-sm-8">
                         <div class="input-group">
-                            <input type="number" class="form-control" readonly value="{{this.HanSuDung}}"
+                            <input type="text" class="form-control" readonly value="{{this.HanSuDung}}"
                                 aria-label="inputEx" name="expiry" aria-describedby="basic-addon1">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">tháng</span>
@@ -68,7 +68,7 @@
                     <label for="inputCost" class="col-sm-4 col-form-label">Giá bán</label>
                     <div class="col-sm-8">
                         <div class="input-group">
-                            <input type="number" class="form-control" value="{{this.GiaBan}}" aria-label="inputCost"
+                            <input type="text" class="form-control" value="{{this.GiaBan}}" aria-label="inputCost"
                                 readonly name="price" aria-describedby="basic-addon1">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">VNĐ</span>
@@ -83,7 +83,7 @@
                     <div class="col-sm-8">
                         {{#each discount}}
                         <div class="input-group">
-                            <input type="number" class="form-control" value="{{this.Giam}}" aria-label="discount"
+                            <input type="text" class="form-control" value="{{this.Giam}}" aria-label="discount"
                                 readonly name="discount" aria-describedby="basic-addon1">
                             <div class="input-group-prepend">
                                 <span class="input-group-text" id="basic-addon1">VNĐ</span>

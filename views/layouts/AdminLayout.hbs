@@ -25,43 +25,43 @@
         </a>
         <ul class="nav-links">
             <li>
-                <a href="/admin" class="active">
+                <a href="/admin"{{#eq title 'Dashboard'}} class="active"{{/eq}}>
                     <i class='bx bx-grid-alt'></i>
                     <span class="links_name">Trang chính</span>
                 </a>
             </li>
             <li>
-                <a href="/admin/products">
+                <a href="/admin/products"{{#eq title 'Sản phẩm'}} class="active"{{/eq}}>
                     <i class='bx bx-box'></i>
                     <span class="links_name">Quản lý sản phẩm</span>
                 </a>
             </li>
             <li>
-                <a href="/admin/warehouse">
+                <a href="/admin/warehouse"{{#eq title 'Quản lý kho'}} class="active"{{/eq}}>
                     <i class='bx bx-coin-stack'></i>
                     <span class="links_name">Quản lý kho hàng</span>
                 </a>
             </li>
             <li>
-                <a href="/admin/staff">
+                <a href="/admin/staff"{{#eq title 'Nhân viên'}} class="active"{{/eq}}>
                     <i class='fa fa-user' aria-hidden="true"></i>
                     <span class="links_name">Quản lý nhân viên</span>
                 </a>
             </li>
             <li>
-                <a href="/admin/orders">
+                <a href="/admin/orders"{{#eq title 'Đơn hàng'}} class="active"{{/eq}}>
                     <i class='bx bx-list-ul'></i>
                     <span class="links_name">Quản lý đơn hàng</span>
                 </a>
             </li>
             <li>
-                <a href="/admin/statistic">
+                <a href="/admin/statistic"{{#eq title 'Thống kê'}} class="active"{{/eq}}>
                     <i class='bx bx-pie-chart-alt-2'></i>
                     <span class="links_name">Thống kê</span>
                 </a>
             </li>
             <li>
-                <a href="/admin/turnover">
+                <a href="/admin/turnover"{{#eq title 'Doanh thu'}} class="active"{{/eq}}>
                     <i class="fa fa-btc" aria-hidden="true"></i>                    
                     <span class="links_name">Doanh thu</span>
                 </a>

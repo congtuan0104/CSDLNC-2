@@ -1,0 +1,25 @@
+<div class="container-md px-5 py-3 text-center" style="background-color: white;border-radius:25px">
+    <h4 class="text-primary mt-3 mb-5">DANH SÁCH NHÂN VIÊN</h4>
+    <div class="row">
+        {{#each staff}}
+        <div class="col-sm-6 col-md-4">
+            <a href="/manager/staff/{{this.MaNV}}" class="text-decoration-none">
+                <div class="card mb-3" style="max-width: 540px;">
+                    <div class="row no-gutters">
+                        <div class="col-md-4">
+                            <img src="/img/staff2.jpg" class="w-100">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">{{this.TenNV}}</h5>
+                                <p class="card-text"><small class="text-muted">Nhân viên bán hàng</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {{/each}}
+    </div>
+
+</div>

@@ -1,24 +1,23 @@
 <div class="container-md px-5 py-3 text-center" style="background-color: white;border-radius:25px">
 
     <div class="row align-items-center border-bottom py-3">
-        <div class="col-1">ID</div>
-        <div class="col">Chi nhánh</div>
+        <div class="col-1">STT</div>
         <div class="col-3"> Ngày lập</div>
+        <div class="col"> Địa chỉ gửi hàng</div>
         <div class="col-2"> Tổng tiền</div>
-        <div class="col-3"> Địa chỉ gửi hàng</div>
         <div class="col-2"> Tình trạng</div>
 
     </div>
     {{#each orders}}
-    <div class="row align-items-center border-bottom py-2">
-        <div class="col-1">{{this.MaHD}}</div>
-        <div class="col">{{this.MaCN}}</div>
-        <div class="col-3">{{this.NgayLap}}</div>
-        <div class="col-2">{{this.TongTien}}đ</div>
-        <div class="col-3">{{this.DiaChiNhanHang}}</div>
-        <div class="col-2">{{this.TinhTrang}}</div>
-
-    </div>
+    <a href="/manager/orders/{{this.MaHD}}" class="text-decoration-none text-secondary">
+        <div class="row align-items-center border-bottom py-3">
+            <div class="col-1">{{sum @index 1}}</div>
+            <div class="col-3">{{this.NgayLap}}</div>
+            <div class="col">{{this.DiaChiNhanHang}}</div>
+            <div class="col-2">{{this.TongTien}}đ</div>
+            <div class="col-2 text-primary">{{this.TinhTrang}}</div>
+        </div>
+    </a>
     {{/each}}
 
 
@@ -27,28 +26,31 @@
         <div class="col">
             <ul class="pagination justify-content-center">
                 <li class="page-item{{#eq page 1}} disabled{{/eq}}">
-                    <a class="page-link" href="/manager/orders?page={{sub page 1}}">Trước</a>
+                    <a class="page-link" href="/manager/orders?page=1">
+                        <<</a>
                 </li>
-                <li class="page-item"><a class="page-link" href="/manager/orders?page=1">1</a></li>
-                <li class="page-item"><a class="page-link" href="/manager/orders?page=2">2</a></li>
-                <li class="page-item"><a class="page-link" href="/manager/orders?page=3">3</a></li>
-                <li class="page-item"><a class="page-link" href="/manager/orders?page=4">4</a></li>
-                <li class="page-item"><a class="page-link" href="/manager/orders?page=5">5</a></li>
-                <li class="page-item"><a class="page-link" href="/manager/orders?page=6">6</a></li>
-                <li class="page-item">
-                    <a class="page-link" href="/manager/orders?page={{sum page 1}}">Tiếp</a>
+                <li class="page-item{{#eq page 1}} disabled{{/eq}}">
+                    <a class="page-link" href="/manager/orders?page={{sub page 1}}">
+                        <</a>
+                </li>
+                {{#each pageList}}
+                <li class="page-item {{#ifStr this page}} disabled{{/ifStr}}"><a class="page-link"
+                        href="/manager/orders?page={{this}}">{{this}}</a></li>
+                {{/each}}
+                <li class="page-item{{#eq page numberOfPage}} disabled{{/eq}}">
+                    <a class="page-link" href="/manager/orders?page={{sum page 1}}">></a>
+                </li>
+                <li class="page-item{{#eq page numberOfPage}} disabled{{/eq}}">
+                    <a class="page-link" href="/manager/orders?page={{numberOfPage}}">>></a>
                 </li>
             </ul>
         </div>
     </div>
 
     <div class="fixed-bottom" style="bottom: 10px; right:10px">
-        <button class="btn btn-primary float-right rounded-circle justify-content-center" 
-        aria-controls="collapseExample" data-toggle="modal" data-target="#dialog1">
+        <button class="btn btn-primary float-right rounded-circle justify-content-center"
+            aria-controls="collapseExample" data-toggle="modal" data-target="#dialog1">
             <i class="fa fa-plus text-white" aria-hidden="true" style="font-size:30px;"></i>
         </button>
     </div>
 </div>
-
-
-

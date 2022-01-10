@@ -17,6 +17,8 @@ route.get('/removeProduct',adminController.removeProduct);
 route.post('/addProduct',adminController.addProduct);
 route.get('/statistic', adminController.statistic);
 route.get('/products',adminController.allProducts);
+route.get('/staff/:staffID',adminController.staffDetail);
+route.get('/staff',adminController.staff);
 route.get('/',adminController.showDashboard);
 
 module.exports = route;

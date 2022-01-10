@@ -1,6 +1,35 @@
 var config = require('./dbConfig');
 const sql = require('mssql/msnodesqlv8');
 
+async function getNumberOfPage(tblName) {
+    try {
+        let numberOfPage;
+        let pool = await sql.connect(config);
+        let numberOfProducts = await pool.request()
+            .query("SELECT COUNT(*) AS SL from "+tblName);
+        numberOfPage = Math.ceil(parseInt(numberOfProducts.recordset[0].SL) / parseInt(20));
+        return numberOfPage;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+async function getNumberOfPageOrders(branchID) {
+    try {
+        let numberOfPage;
+        let pool = await sql.connect(config);
+        let numberOfOrders = await pool.request()
+            .input('MaCN', sql.Int, branchID)
+            .query("SELECT COUNT(*) AS SL from HOADON WHERE MaCN=@MaCN AND TinhTrang<>-1");
+        numberOfPage = Math.ceil(parseInt(numberOfOrders.recordset[0].SL) / parseInt(20));
+        return numberOfPage;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
 async function get10Products() {
     try {
         let pool = await sql.connect(config);
@@ -248,7 +277,7 @@ async function addToOrder(customerID, address, grandTotal, branchID, staffID) {
             .input('TongTien', sql.Money, grandTotal)
             .execute('sp_THEM_HD');
 
-        return order.recordset.at(0).MaHD;     
+        return order.recordset.at(0).MaHD;
     }
     catch (error) {
         console.log(error);
@@ -360,9 +389,10 @@ async function getOrderDetail(orderID) {
         let pool = await sql.connect(config);
         let detail = await pool.request()
             .input('input_parameter', sql.Int, orderID)
-            .query("SELECT h.MaHD, convert(varchar(10), NgayLap, 105) AS NgayLap, DiaChiNhanHang, TongTien, TenNV, TinhTrang"
-                + " FROM HOADON h LEFT JOIN NHANVIEN n ON h.MaNV=n.MaNV"
-                + " WHERE h.MaHD=@input_parameter");
+            .query(`SELECT h.MaHD, convert(varchar(10), NgayLap, 105) AS NgayLap, DiaChiNhanHang, 
+                TongTien, TenNV, TinhTrang, TenKH,k.SDT
+                FROM HOADON h LEFT JOIN NHANVIEN n ON h.MaNV=n.MaNV JOIN KHACHHANG k ON h.MaKH=k.MaKH
+                WHERE h.MaHD=@input_parameter`);
         if (detail.recordset.length == 0) return null;
         return detail.recordset;
     }
@@ -543,6 +573,21 @@ async function cancelOrder(orderID) {
     }
 }
 
+async function sendOrder(orderID) {
+    try {
+        let pool = await sql.connect(config);
+        let order = await pool.request();
+        order.input('MaHD', sql.Int, orderID);
+        order.query(`UPDATE HOADON SET TinhTrang=1 WHERE MaHD=@MaHD`);
+        //if(error) return 0;
+        return 1;
+    }
+    catch (error) {
+        console.log(error);
+        return 0;
+    }
+}
+
 async function addDiscount(productID, discountRate, startDate, endDate) {
     try {
         let pool = await sql.connect(config);
@@ -666,16 +711,53 @@ async function getAllOrders(page) {
     }
 }
 
+async function getAllOrdersBranch(page,branchID) {
+    try {
+        let pool = await sql.connect(config);
+        let order = await pool.request()
+            .input('startOffset', sql.Int, (page - 1) * 20)
+            .input('MaCN', sql.Int, branchID)
+            .query(`SELECT MaHD,MaKH,MaNV,CONVERT(VARCHAR(19),NgayLap,120) AS NgayLap, DiaChiNhanHang,TongTien,TinhTrang
+                    FROM HOADON
+                    WHERE TinhTrang <> -1 AND MaCN=@MaCN
+                    ORDER BY TinhTrang ASC, MAHD ASC
+                    OFFSET @startOffset ROWS FETCH NEXT 20 rows ONLY`);
+        return order.recordset;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
 async function showTurnover(page) {
     try {
         let pool = await sql.connect(config);
         let turnover = await pool.request()
-            .input('startOffset', sql.Int, (page - 1) * 20)
+            .input('startOffset', sql.Int, (page - 1) * 12)
             .query(`SELECT DT_Thang AS Thang, DT_Nam AS Nam, SUM(DOANHTHU) AS TongDoanhThu,
                     SUM(ChiTieu) AS ChiTieu FROM CHITIEU_DOANHTHU
                     GROUP BY DT_Thang, DT_Nam
-                    ORDER BY DT_Nam DESC, DT_Thang ASC
-                    OFFSET @startOffset ROWS FETCH NEXT 20 rows ONLY`);
+                    ORDER BY DT_Nam DESC, DT_Thang DESC
+                    OFFSET @startOffset ROWS FETCH NEXT 12 rows ONLY`);
+        return turnover.recordset;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+
+async function showTurnoverBranch(page,branchID) {
+    try {
+        let pool = await sql.connect(config);
+        let turnover = await pool.request()
+            .input('startOffset', sql.Int, (page - 1) * 12)
+            .input('MaCN', sql.Int, branchID)
+            .query(`SELECT DT_Thang AS Thang, DT_Nam AS Nam, DoanhThu, ChiTieu
+                    FROM CHITIEU_DOANHTHU
+                    WHERE MaCN=@MaCN
+                    ORDER BY DT_Nam DESC, DT_Thang DESC
+                    OFFSET @startOffset ROWS FETCH NEXT 12 rows ONLY`);
         return turnover.recordset;
     }
     catch (error) {
@@ -705,6 +787,23 @@ async function getBestSeller2() {
             .query(`SELECT TOP 20 s.MaSP, TenSP, SLBan, GiaBan, TongSoLuongTon
                 FROM SANPHAM s, SANPHAM_TIEUTHU st
                 WHERE s.MaSP=st.MaSP AND Thang=MONTH(GETDATE()) AND Nam=YEAR(GETDATE())
+                ORDER BY SLBan DESC`);
+        return seller.recordset;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+async function getBestSeller3(branchID) {
+    try {
+        let pool = await sql.connect(config);
+        let seller = await pool.request()
+            .input('MaCN', sql.Int, branchID)
+            .query(`SELECT TOP 20 s.MaSP, TenSP, SLBan, GiaBan, SLTon
+                FROM SANPHAM s, SANPHAM_TIEUTHU st, SANPHAM_CHINHANH sc
+                WHERE s.MaSP=st.MaSP AND Thang=MONTH(GETDATE()) AND Nam=YEAR(GETDATE()) 
+                AND sc.MaSP=s.MaSP AND MaCN = @MaCN
                 ORDER BY SLBan DESC`);
         return seller.recordset;
     }
@@ -767,7 +866,70 @@ async function updateQuantity(branchID, productID, date, quantity) {
     }
 }
 
+
+async function getAllStaff() {
+    try {
+        let pool = await sql.connect(config);
+        let staff = await pool.request()
+            .query('SELECT * FROM NHANVIEN WHERE LoaiNhanVien<>2 ORDER BY LoaiNhanVien DESC, MaCN ASC');
+        if(staff.recordset.length==0) return null;
+        return staff.recordset;
+    }
+    catch (error) {
+        console.log(error);
+        return 0;
+    }
+}
+
+
+async function getAllStaffBranch(branchID) {
+    try {
+        let pool = await sql.connect(config);
+        let staff = await pool.request()
+            .input('macn', sql.Int, branchID)
+            .query('SELECT * FROM NHANVIEN WHERE MACN=@macn AND LoaiNhanVien<>1');
+        if(staff.recordset.length==0) return null;
+        return staff.recordset;
+    }
+    catch (error) {
+        console.log(error);
+        return 0;
+    }
+}
+
+async function getStaffDetail(staffID) {
+    try {
+        let pool = await sql.connect(config);
+        let staff = await pool.request()
+            .input('MaNV', sql.Int, staffID)
+            .query('SELECT * FROM NHANVIEN WHERE MaNV=@MaNV');
+        if(staff.recordset.length==0) return null;
+        return staff.recordset;
+    }
+    catch (error) {
+        console.log(error);
+        return 0;
+    }
+}
+
+async function getSalaryHistory(staffID) {
+    try {
+        let pool = await sql.connect(config);
+        let staff = await pool.request()
+            .input('MaNV', sql.Int, staffID)
+            .query('SELECT * FROM CHITIET_LUONG WHERE MaNV=@MaNV ORDER BY Nam DESC, Thang DESC');
+        if(staff.recordset.length==0) return null;
+        return staff.recordset;
+    }
+    catch (error) {
+        console.log(error);
+        return 0;
+    }
+}
+
 module.exports = {
+    getNumberOfPage: getNumberOfPage,
+    getNumberOfPageOrders:getNumberOfPageOrders,
     getAllProducts: getAllProducts,
     getProducts: getProducts,
     getProduct: getProduct,
@@ -802,11 +964,15 @@ module.exports = {
     getImportHistory: getImportHistory,
     confirmOrder: confirmOrder,
     cancelOrder: cancelOrder,
+    sendOrder: sendOrder,
     getAllOrders: getAllOrders,
+    getAllOrdersBranch: getAllOrdersBranch,
     showTurnover: showTurnover,
+    showTurnoverBranch: showTurnoverBranch,
     getOrderID: getOrderID,
     getBestSeller: getBestSeller,
     getBestSeller2: getBestSeller2,
+    getBestSeller3: getBestSeller3,
     getRecentOrder: getRecentOrder,
     getRecentOrderBranch: getRecentOrderBranch,
     getProductBranch: getProductBranch,
@@ -814,5 +980,9 @@ module.exports = {
     getImportHistory3: getImportHistory3,
     updateQuantity: updateQuantity,
     getBatchID: getBatchID,
+    getAllStaffBranch:getAllStaffBranch,
+    getStaffDetail:getStaffDetail,
+    getSalaryHistory: getSalaryHistory,
+    getAllStaff: getAllStaff,
 
 }

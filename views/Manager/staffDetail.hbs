@@ -1,0 +1,129 @@
+<div class="container bg-white mt-2 mb-2" style="border-radius:25px">
+    <div class="row">
+        <div class="col-md-3 border-right ">
+            {{#each staff}}
+            <div class="d-flex flex-column align-items-center text-center p-3 pt-5">
+                <img class="rounded-circle mt-2" width="150px" src="/img/staff2.jpg">
+                <span class="font-weight-bold">{{this.TenNV}}</span>
+                <span class="text-black-50 text-break">Nhân viên bán hàng</span>
+            </div>
+            {{/each}}
+
+        
+            <div class="row pt-4" style="border-top:1px solid rgba(128, 128, 128, 0.528)">
+                {{#each salaryHistory}}
+                {{#eq @index 0}}
+                <div class="col-md-12">
+                    <label class="labels">Lương cơ bản</label>
+                    <input type="text" disabled value="{{this.LuongCoBan}}đ" class="form-control">
+                </div>
+                <div class="col-md-12 mt-4">
+                    <label class="labels">Số ngày nghỉ trong tháng</label>
+                    <input type="number" value="{{this.SoNgayNghiTrongThang}}" class="form-control">
+                </div>
+                {{/eq}}
+                {{/each}}
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="py-4">
+                <div class="col-md-12" style="padding: 0;">
+                    {{#each salaryHistory}}
+                    {{#eq @index 0}}
+                    <div class="overview-boxes">
+                        <div class="box" style="width:48%; background-color:#CCE5FF">
+                            <div class="right-side">
+                                <div class="box-topic">Số đơn tháng này</div>
+                                <div class="number">{{this.SoDonHang}}</div>
+                                <div class="indicator">
+                                    <i class='bx bx-plus'></i>
+                                    <span class="text">Thêm 4 đơn hàng hôm nay</span>
+                                </div>
+                            </div>
+                            <i class='bx bx-cart-alt cart'></i>
+                        </div>
+                        
+                        <div class="box" style="width:48%; background-color:#FFE8B3">
+                            <div class="right-side">
+                                <div class="box-topic">Doanh thu tháng</div>
+                                <div class="number">{{this.DoanhThu}}</div>
+                                <div class="indicator">
+                                    <i class='bx bx-up-arrow-alt'></i>
+                                    <span class="text">Tăng 3% với tháng trước</span>
+                                </div>
+                            </div>
+                            <i class='fa fa-btc cart three'></i>
+                        </div>
+
+                    </div>
+                    {{/eq}}
+                    {{/each}}
+                </div>
+                <div class="col-md-12">
+                    <h4 class="pt-4">Lịch sử lương</h4>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="bg-white shadow-sm">
+                                <table class="table">
+                                    <thead>
+                                        <tr class="text-primary">
+                                            <th>Tháng</th>
+                                            <th class="text-center">Lương cơ bản</th>
+                                            <th class="text-center">Nghỉ</th>
+                                            <th class="text-center">Bị trừ</th>
+                                            <th class="text-center">Thưởng</th>
+                                            <th class="text-right">Thực nhận</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each salaryHistory}}
+                                        {{#dif @index 0}}
+                                        <tr class="candidates-list">
+                                            <td>
+                                                <div class="">{{this.Thang}}-{{this.Nam}}</span>
+                                            </td>
+                                            <td>
+                                                <div class="text-center">{{this.LuongCoBan}}đ</span>
+                                            </td>
+                                            <td>
+                                                <div class="text-center">{{this.SoNgayNghiTrongThang}}</span>
+                                            </td>
+                                            <td>
+                                                <div class="text-center">{{this.BiTru}}đ</span>
+                                            </td>
+                                            <td>
+                                                <div class="text-center">{{this.Thuong}}đ</span>
+                                            </td>
+                                            <td>
+                                                <div class="text-right">{{this.LuongThucNhan}}đ</span>
+                                            </td>
+
+                                        </tr>
+                                        {{/dif}}
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                                <div class="text-center mt-3 mt-sm-3">
+                                    <ul class="pagination justify-content-center mb-0">
+                                        <li class="page-item disabled"> <span class="page-link">Prev</span>
+                                        </li>
+                                        <li class="page-item active" aria-current="page"><span class="page-link">1
+                                            </span> <span class="sr-only">(current)</span></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">...</a></li>
+                                        <li class="page-item"> <a class="page-link" href="#">Next</a> </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

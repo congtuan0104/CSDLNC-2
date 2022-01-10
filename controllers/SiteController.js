@@ -3,45 +3,60 @@ const db = require('../models/dbOperations');
 
 class SiteController {
     //[GET]/
-    home(req, res, next) {
-        let page;
-        if(req.query.page){
-            page=req.query.page;
-        }
-        else{
-            page = 1;
-        }
-        if(page<1){
-            page=1;
-        }
-        db.getProducts(page).then((data) => {
-            //res.json(data);
-            //console.log(data);
-            if (req.session.user) {
+    async home(req, res, next) {
+        const page = parseInt(req.query.page) || 1;
 
-                res.render('home', {
-                    title: 'Trang chủ',
-                    user: req.session.user,
-                    numberOfProduct: req.session.cart.length,
-                    products: data,
-                    page: page,
-                    cssP: () => 'css',
-                    scriptP: () => 'script',
-                    navP: () => 'navCustomer',
-                    footerP: () => 'footer',
-                });
-                return;
+        const products = await db.getProducts(page)
+        const numberOfPage = await db.getNumberOfPage('SANPHAM');
+        
+        var pageList = [];
+        if (numberOfPage <= 7) {           
+            for (var i = 1; i <= numberOfPage; i++) {
+                pageList.push(i);
             }
+        }
+        else {
+
+            for (var i = page-3; i < page; i++) {
+                if(i<1) continue;
+                pageList.push(i);
+            }
+
+            for (var i = page; i <= page+3; i++) {
+                if(i>numberOfPage) continue;
+                pageList.push(i);
+            }
+        }
+
+        if (req.session.user) {
+
             res.render('home', {
                 title: 'Trang chủ',
-                products: data,
+                user: req.session.user,
+                numberOfProduct: req.session.cart.length,
+                products: products,
                 page: page,
+                pageList: pageList,
+                numberOfPage: numberOfPage,
                 cssP: () => 'css',
                 scriptP: () => 'script',
-                navP: () => 'nav',
+                navP: () => 'navCustomer',
                 footerP: () => 'footer',
-            })
+            });
+            return;
+        }
+        res.render('home', {
+            title: 'Trang chủ',
+            products: products,
+            page: page,
+            pageList: pageList,
+            numberOfPage: numberOfPage,
+            cssP: () => 'css',
+            scriptP: () => 'script',
+            navP: () => 'nav',
+            footerP: () => 'footer',
         })
+
     }
 
     //[GET]/cart
@@ -143,7 +158,7 @@ class SiteController {
         const staff = await db.verifyStaff(phone);
         if (staff) {
             console.log('Đăng nhập thành công');
-            
+
             if (staff.at(0).LoaiNhanVien == 0) {
                 console.log('Nhân viên bán hàng');
                 req.session.staff = staff;
@@ -152,7 +167,7 @@ class SiteController {
             }
 
             if (staff.at(0).LoaiNhanVien == 1) {
-                console.log('Quản lý chi nhánh');            
+                console.log('Quản lý chi nhánh');
                 req.session.manager = staff;
                 res.redirect('/manager');
                 return;
@@ -177,7 +192,7 @@ class SiteController {
         if (products) {
             if (req.session.user) {
                 res.render('home', {
-                    title: 'Tìm kiếm: ' + q,
+                    title: 'Kết quả tìm kiếm: ' + q,
                     products: products,
                     user: req.session.user,
                     numberOfProduct: req.session.cart.length,
@@ -189,7 +204,7 @@ class SiteController {
                 return;
             }
             res.render('home', {
-                title: 'Tìm kiếm: ' + q,
+                title: 'Kết quả tìm kiếm: ' + q,
                 products: products,
                 cssP: () => 'css',
                 scriptP: () => 'script',
@@ -270,14 +285,14 @@ class SiteController {
             const orderID = await db.addToOrder(customerID, address, grandTotal, branch, null);
 
             var success;
-            if(req.session.cart.length==0){
+            if (req.session.cart.length == 0) {
                 res.send('Chưa có sản phẩm nào trong giỏ hàng');
                 return;
             }
             req.session.cart.forEach(async product => {
-                success = await db.addOrderDetail(orderID, customerID, product.productID , branch, product.cost, product.discount, product.quantity, product.total);
+                success = await db.addOrderDetail(orderID, customerID, product.productID, branch, product.cost, product.discount, product.quantity, product.total);
             });
-            
+
 
             req.session.cart = [];
             req.session.grandTotal = 0;

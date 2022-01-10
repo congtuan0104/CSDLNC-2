@@ -45,20 +45,23 @@
 
 
 
-    <div class="row text-center mt-5 mb-3">
+    <div class="row text-center mt-5 mb-2">
         <div class="col">
             <ul class="pagination justify-content-center">
                 <li class="page-item{{#eq page 1}} disabled{{/eq}}">
-                    <a class="page-link" href="/admin/products?page={{sub page 1}}">Trước</a>
+                    <a class="page-link" href="/admin/products?page=1"><<</a>
                 </li>
-                <li class="page-item"><a class="page-link" href="/admin/products?page=1">1</a></li>
-                <li class="page-item"><a class="page-link" href="/admin/products?page=2">2</a></li>
-                <li class="page-item"><a class="page-link" href="/admin/products?page=3">3</a></li>
-                <li class="page-item"><a class="page-link" href="/admin/products?page=4">4</a></li>
-                <li class="page-item"><a class="page-link" href="/admin/products?page=5">5</a></li>
-                <li class="page-item"><a class="page-link" href="/admin/products?page=6">6</a></li>
-                <li class="page-item{{#eq page 6}} disabled{{/eq}}">
-                    <a class="page-link" href="/admin/products?page={{sum page 1}}">Tiếp</a>
+                <li class="page-item{{#eq page 1}} disabled{{/eq}}">
+                    <a class="page-link" href="/admin/products?page={{sub page 1}}"><</a>
+                </li>
+                {{#each pageList}}
+                <li class="page-item {{#ifStr this page}} disabled{{/ifStr}}"><a class="page-link" href="/admin/products?page={{this}}">{{this}}</a></li>
+                {{/each}}
+                <li class="page-item{{#eq page numberOfPage}} disabled{{/eq}}">
+                    <a class="page-link" href="/admin/products?page={{sum page 1}}">></a>
+                </li>
+                <li class="page-item{{#eq page numberOfPage}} disabled{{/eq}}">
+                    <a class="page-link" href="/admin/products?page={{numberOfPage}}">>></a>
                 </li>
             </ul>
         </div>

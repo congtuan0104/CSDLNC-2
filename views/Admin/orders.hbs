@@ -1,7 +1,7 @@
 <div class="container-md px-5 py-3 text-center" style="background-color: white;border-radius:25px">
 
     <div class="row align-items-center border-bottom py-3">
-        <div class="col-1">ID</div>
+        <div class="col-1">STT</div>
         <div class="col">Chi nhánh</div>
         <div class="col-3"> Ngày lập</div>
         <div class="col-2"> Tổng tiền</div>
@@ -11,7 +11,7 @@
     </div>
     {{#each orders}}
     <div class="row align-items-center border-bottom py-2">
-        <div class="col-1">{{this.MaHD}}</div>
+        <div class="col-1">{{sum @index 1}}</div>
         <div class="col">{{this.MaCN}}</div>
         <div class="col-3">{{this.NgayLap}}</div>
         <div class="col-2">{{this.TongTien}}đ</div>

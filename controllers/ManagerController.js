@@ -40,15 +40,26 @@ class ManagerController {
     async allProducts(req, res, next) {
         if (req.session.manager) {
             const manager = req.session.manager;
-            let page;
-            if (req.query.page) {
-                page = req.query.page;
+            const page = parseInt(req.query.page) || 1;
+            const numberOfPage = await db.getNumberOfPage('SANPHAM');
+
+            var pageList = [];
+            if (numberOfPage <= 7) {
+                for (var i = 1; i <= numberOfPage; i++) {
+                    pageList.push(i);
+                }
             }
             else {
-                page = 1;
-            }
-            if (page < 1) {
-                page = 1;
+
+                for (var i = page - 3; i < page; i++) {
+                    if (i < 1) continue;
+                    pageList.push(i);
+                }
+
+                for (var i = page; i <= page + 3; i++) {
+                    if (i > numberOfPage) continue;
+                    pageList.push(i);
+                }
             }
             const productsList = await db.getProductBranch(manager.at(0).MaCN, page);
             productsList.forEach(product => {
@@ -62,6 +73,8 @@ class ManagerController {
                 title: 'Sản phẩm',
                 manager: manager,
                 page: page,
+                numberOfPage: numberOfPage,
+                pageList: pageList,
                 products: productsList,
                 cssP: () => 'css',
                 scriptP: () => 'script',
@@ -138,11 +151,11 @@ class ManagerController {
         if (req.session.manager) {
             const productID = req.body.productID;
             const branchID = req.body.branchID;
-            const date = req.body.date; 
+            const date = req.body.date;
             const quantity = req.body.quantity;
-            const update = await db.updateQuantity(branchID, productID, date, quantity);         
-            const url= '/manager/products/'+ productID;  
-            setTimeout(() => {  console.log("Running!"); }, 1000);
+            const update = await db.updateQuantity(branchID, productID, date, quantity);
+            const url = '/manager/products/' + productID;
+            setTimeout(() => { console.log("Running!"); }, 1000);
             res.redirect(url);
             return;
         }
@@ -168,7 +181,7 @@ class ManagerController {
             const batchID = await db.getBatchID(manager.at(0).MaCN, batch);
 
             const importHistory = await db.getImportHistory3(batchID.at(0).MaDot);
-            var value=0;
+            var value = 0;
             importHistory.forEach(element => {
                 value = value + element.GIATRI;
             });
@@ -194,17 +207,28 @@ class ManagerController {
     async allOrders(req, res, next) {
         if (req.session.manager) {
             const manager = req.session.manager;
-            let page;
-            if (req.query.page) {
-                page = req.query.page;
+            const page = parseInt(req.query.page) || 1;
+            const numberOfPage = await db.getNumberOfPageOrders(manager.at(0).MaCN);
+
+            var pageList = [];
+            if (numberOfPage <= 7) {
+                for (var i = 1; i <= numberOfPage; i++) {
+                    pageList.push(i);
+                }
             }
             else {
-                page = 1;
+
+                for (var i = page - 3; i < page; i++) {
+                    if (i < 1) continue;
+                    pageList.push(i);
+                }
+
+                for (var i = page; i <= page + 3; i++) {
+                    if (i > numberOfPage) continue;
+                    pageList.push(i);
+                }
             }
-            if (page < 1) {
-                page = 1;
-            }
-            const ordersList = await db.getAllOrders(page);
+            const ordersList = await db.getAllOrdersBranch(page,manager.at(0).MaCN);
             ordersList.forEach(order => {
                 if (order.TinhTrang == 0) {
                     order.TinhTrang = 'Chưa gửi hàng';
@@ -222,6 +246,8 @@ class ManagerController {
                 title: 'Đơn hàng',
                 manager: manager,
                 page: page,
+                numberOfPage: numberOfPage,
+                pageList: pageList,
                 orders: ordersList,
                 cssP: () => 'css',
                 scriptP: () => 'script',
@@ -231,6 +257,53 @@ class ManagerController {
         res.redirect('/sign-in');
     }
 
+
+    //[GET]/manager/orders/:orderID
+    async orderDetail(req, res, next) {
+        if (req.session.manager) {
+            const orderID = req.params.orderID;
+            const manager = req.session.manager;
+            const orderDetail = await db.getOrderDetail(orderID);
+            const orderList = await db.getOrderList(orderID);
+            const status = orderDetail.at(0).TinhTrang;
+            if (orderDetail.at(0).TinhTrang == -1) {
+                orderDetail.at(0).TinhTrang  = 'Đã huỷ đơn';
+            }
+            else if (orderDetail.at(0).TinhTrang == 0) {
+                orderDetail.at(0).TinhTrang  = 'Chưa gửi hàng';
+            }           
+            else if (orderDetail.at(0).TinhTrang  == 1) {
+                orderDetail.at(0).TinhTrang  = 'Đang gửi hàng';
+            }
+            else if (orderDetail.at(0).TinhTrang  == 2) {
+                orderDetail.at(0).TinhTrang  = 'Đã thanh toán';
+            }     
+
+            res.render('./Manager/orderDetail', {
+                layout: 'ManagerLayout',
+                title: 'Chi tiết hoá đơn',
+                manager: manager,
+                orderDetail: orderDetail,
+                orderList: orderList,
+                status: status,
+                cssP: () => 'invoice-template',
+                scriptP: () => 'script',
+            });
+            return;
+        }
+        res.redirect('/sign-in');
+    }
+
+    //[GET]/manager/sendOrder
+    async sendOrder(req, res) {
+        if (req.session.manager) {
+            const orderID = req.query.orderID;
+            const operation = db.sendOrder(orderID);
+            res.redirect('/manager/orders');
+            return;
+        }
+        res.redirect('/sign-in');
+    }
 
     //[GET]/manager/turnover
     async showTurnover(req, res, next) {
@@ -246,7 +319,7 @@ class ManagerController {
             if (page < 1) {
                 page = 1;
             }
-            const allTurnover = await db.showTurnover(page);
+            const allTurnover = await db.showTurnoverBranch(page,manager.at(0).MaCN);
 
 
             res.render('./Manager/turnover', {
@@ -280,8 +353,8 @@ class ManagerController {
             if (page < 1) {
                 page = 1;
             }
-            const allTurnover = await db.showTurnover(page);
-            const bestSeller = await db.getBestSeller2();
+            const allTurnover = await db.showTurnoverBranch(page,manager.at(0).MaCN);
+            const bestSeller = await db.getBestSeller3(manager.at(0).MaCN);
 
             res.render('./Manager/statistic', {
                 layout: 'ManagerLayout',
@@ -291,6 +364,60 @@ class ManagerController {
                 year: year,
                 turnover: allTurnover,
                 products: bestSeller,
+                cssP: () => 'css',
+                scriptP: () => 'script',
+            });
+            return;
+        }
+        res.redirect('/sign-in');
+    }
+
+
+    //[GET]/manager/staff
+    async staff(req, res, next) {
+        if (req.session.manager) {
+            const manager = req.session.manager;
+            const staffList = await db.getAllStaffBranch(manager.at(0).MaCN);
+
+            res.render('./Manager/staff', {
+                layout: 'ManagerLayout',
+                title: 'Nhân viên',
+                manager: manager,
+                staff: staffList,
+                cssP: () => 'css',
+                scriptP: () => 'script',
+            });
+            return;
+        }
+        res.redirect('/sign-in');
+    }
+
+    //[GET]/manager/staff/staffID
+    async staffDetail(req, res, next) {
+        if (req.session.manager) {
+            const manager = req.session.manager;
+            const staffID = req.params.staffID;
+            const staff = await db.getStaffDetail(staffID);
+            const salaryHistory = await db.getSalaryHistory(staffID);
+            
+            salaryHistory.forEach(element => {
+                element.BiTru= element.SoNgayNghiTrongThang*380000;
+                element.HieuSuat = element.DoanhThu/element.ChiTieu;
+                if(element.DoanhThu>element.ChiTieu){
+                    element.Thuong = 200000;
+                }
+                else{
+                    element.Thuong = 0;
+                }
+            });
+
+
+            res.render('./Manager/staffDetail', {
+                layout: 'ManagerLayout',
+                title: 'Nhân viên',
+                manager: manager,
+                staff: staff,
+                salaryHistory: salaryHistory,
                 cssP: () => 'css',
                 scriptP: () => 'script',
             });

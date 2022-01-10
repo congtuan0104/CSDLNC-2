@@ -12,7 +12,7 @@ const hbs = handlebars.create({
     defaultLayout: 'main',
     extname: 'hbs',
     helpers: {
-        ifStr(s1, s2, option) {
+        ifStr(s1, s2, options) {
             if (s1 === s2) {
                 return options.fn(this)
             }
@@ -24,6 +24,13 @@ const hbs = handlebars.create({
                 return option.fn(this)
             }
             return option.inverse(this)
+        },
+
+        dif(s1,s2,option){
+            if(s1==s2){
+                return option.inverse(this)
+            }           
+            return option.fn(this);
         },
 
         sum(s1,s2){
