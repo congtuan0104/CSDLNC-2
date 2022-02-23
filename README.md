@@ -2,6 +2,8 @@
 Khảo sát và thiết kế hệ thống bán hàng trực tuyến<br>
 Cấu hình server đặt trong file /models/dbConfig.js
 
+## Video Demo: [Link](https://www.youtube.com/watch?v=3SNTU8fi-v8)
+
 ## Thông tin chung
 * Mã số đồ án: 2021_CSDLNC_DA#2
 * Thời gian thực hiện: 6 tuần
