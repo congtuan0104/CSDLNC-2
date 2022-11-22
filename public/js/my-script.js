@@ -500,4 +500,13 @@ $(function () {
 
 });
 
+let money = document.querySelectorAll(".money");
+for (let i = 0, len = money.length; i < len; i++) {
+    let num = Number(money[i].innerHTML)
+        .toLocaleString('vi');
+    money[i].innerHTML = num;
+    money[i].classList.add("currSign");
+}
+
+
 
